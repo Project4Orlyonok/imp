@@ -5,7 +5,7 @@ import jade.lang.acl.MessageTemplate;
 
 public class GenBehDur extends Behaviour {
     AID topic;
-    GenInf power = new GenInf();
+    GenInf power = new GenInf(myAgent.getLocalName());
     Time time;
 
     public GenBehDur(Time time, AID topic) {

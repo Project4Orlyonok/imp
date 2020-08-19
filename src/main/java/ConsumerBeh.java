@@ -11,6 +11,7 @@ import java.util.Random;
 public class ConsumerBeh extends TickerBehaviour {
     public Time time;
     Const poww = new Const();
+    double pow;
 
     //    List<Double> pow=Arrays.asList(1.0,2.4,3.7,4.0,5.8);
     public ConsumerBeh(Agent a, long period, Time time) {
@@ -21,8 +22,12 @@ public class ConsumerBeh extends TickerBehaviour {
 
     @Override
     protected void onTick() {
-
-        double pow = poww.pow(time.getCurrentTime(),myAgent.getLocalName());
+        if (myAgent.getLocalName().equals("Consumer1")) {
+            double pow = poww.pow(time.getCurrentTime(), myAgent.getLocalName())+3;
+        }
+        else {
+            double pow = poww.pow(time.getCurrentTime(), myAgent.getLocalName());
+        }
         ACLMessage message = new ACLMessage(ACLMessage.INFORM);
         message.setContent(String.valueOf(pow));
         message.setProtocol("NeedAuction");
@@ -31,7 +36,7 @@ public class ConsumerBeh extends TickerBehaviour {
         MessageTemplate mt = MessageTemplate.MatchProtocol("End");
         ACLMessage receivedMsg = myAgent.receive(mt);
         if (receivedMsg != null) {
-            System.out.println(receivedMsg.getContent());
+            System.out.println(receivedMsg.getContent()+"   "+myAgent.getLocalName());
 //            flag = true;
         }
 //        ожидание сообщ от дистр о вышло/не вышло

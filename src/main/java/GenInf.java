@@ -1,3 +1,5 @@
+import jade.core.Agent;
+
 import java.util.ArrayList;
 
 public class GenInf {
@@ -5,9 +7,18 @@ public class GenInf {
     public ArrayList<Double> pow = new ArrayList<>();
     public double nakop;
     public double minpri,maxnakop;
-//имя агента в конс
+    public String agent;
+
+    public GenInf(String agent) {
+        this.agent = agent;
+    }
+
+    //имя агента в конс
     public double price(int time){
-//        nakop+=;
+        if (agent.equals("System")||agent.equals("Heat")){
+            nakop=0;
+        }
+        nakop+=new GenHour().PowHour(agent,time);
         if (nakop>maxnakop) nakop=maxnakop;
         return minpri*maxnakop/nakop;
     }

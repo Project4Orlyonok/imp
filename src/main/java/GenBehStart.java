@@ -20,7 +20,7 @@ public class GenBehStart extends Behaviour {
         MessageTemplate mt = MessageTemplate.MatchProtocol("Start");
         ACLMessage receivedMsg = myAgent.receive(mt);
         if (receivedMsg != null) {
-            topic = subsTopic(receivedMsg.getContent());
+            topic = new Topic(myAgent).subsTopic(receivedMsg.getContent());
 //            flag = true;
         }
 //        System.out.println(topic);
@@ -42,17 +42,17 @@ public class GenBehStart extends Behaviour {
 //    }
 
 
-    private AID subsTopic(String topicName) {
-        TopicManagementHelper topicHelper = null;
-        AID jadeTopic = null;
-        try {
-            topicHelper = (TopicManagementHelper)
-                    myAgent.getHelper(TopicManagementHelper.SERVICE_NAME);
-            jadeTopic = topicHelper.createTopic(topicName);
-            topicHelper.register(jadeTopic);
-        } catch (ServiceException e) {
-            e.printStackTrace();
-        }
-        return jadeTopic;
-    }
+//    private AID subsTopic(String topicName) {
+//        TopicManagementHelper topicHelper = null;
+//        AID jadeTopic = null;
+//        try {
+//            topicHelper = (TopicManagementHelper)
+//                    myAgent.getHelper(TopicManagementHelper.SERVICE_NAME);
+//            jadeTopic = topicHelper.createTopic(topicName);
+//            topicHelper.register(jadeTopic);
+//        } catch (ServiceException e) {
+//            e.printStackTrace();
+//        }
+//        return jadeTopic;
+//    }
 }

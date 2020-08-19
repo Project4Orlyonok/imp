@@ -18,8 +18,10 @@ public class Main {
 //        Time time=new Time();
 //        some.start();
 
-        Const cons=new Const();
-        cons.setPow();
-        System.out.println(cons.pow(2,"Consumer1"));
+//        Const cons=new Const();
+//        cons.setPow();
+//        System.out.println(cons.pow(2,"Consumer1.xml"));
+        GenInf gen=new GenInf("Heat");
+        System.out.println(gen.price(4));
     }
 }

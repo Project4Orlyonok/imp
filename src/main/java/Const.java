@@ -10,11 +10,12 @@ public class Const {
         for (int i = 0; i < 24; i++) {
             pow.add(Math.random()*100);
         }
+
     }
 
     public double pow(int time,String name) {
-        Config config = WorkWithCfgs.unMarshalAny(Config.class,name);
-        System.out.println(config);
+//        Config config = WorkWithCfgs.unMarshalAny(Config.class,name);
+//        System.out.println(config);
         return pow.get(time);
 
     }
