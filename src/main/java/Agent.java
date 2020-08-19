@@ -20,7 +20,7 @@ public class Agent extends jade.core.Agent {
         switch (getLocalName()) {
             case "Sun", "Wind", "Heat", "System": {
                 dfRegister();
-                addBehaviour(new GenBehStart());
+                addBehaviour(new GenBehStart(time));
                 break;
             }
             case "Distributor": {

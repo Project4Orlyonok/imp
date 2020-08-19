@@ -8,6 +8,12 @@ import jade.lang.acl.MessageTemplate;
 public class GenBehStart extends Behaviour {
     boolean flag = false;
     public AID topic;
+    Time time;
+
+    public GenBehStart(Time time) {
+        this.time = time;
+    }
+
     @Override
     public void action() {
 //        ACLMessage receivedMsg;
@@ -19,7 +25,7 @@ public class GenBehStart extends Behaviour {
         }
 //        System.out.println(topic);
         if (topic!=null) {
-            myAgent.addBehaviour(new GenBehDur(topic));
+            myAgent.addBehaviour(new GenBehDur(time,topic));
             }
 
     }

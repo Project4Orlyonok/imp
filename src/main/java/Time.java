@@ -8,6 +8,7 @@ public class Time {
         currentTime = (int) ((System.currentTimeMillis() - start) / hour);
         if (currentTime >= 24) {
             start = System.currentTimeMillis();
+            currentTime = (int) ((System.currentTimeMillis() - start) / hour);
         }
 
         return currentTime;

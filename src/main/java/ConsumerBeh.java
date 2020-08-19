@@ -1,6 +1,7 @@
 import jade.core.Agent;
 import jade.core.behaviours.TickerBehaviour;
 import jade.lang.acl.ACLMessage;
+import jade.lang.acl.MessageTemplate;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,9 +24,16 @@ public class ConsumerBeh extends TickerBehaviour {
 
         double pow = poww.pow(time.getCurrentTime());
         ACLMessage message = new ACLMessage(ACLMessage.INFORM);
-        message.setContent(String.valueOf(pow) + myAgent.getLocalName());
+        message.setContent(String.valueOf(pow));
+        message.setProtocol("NeedAuction");
         message.addReceiver(myAgent.getAID("Distributor"));
         myAgent.send(message);
+        MessageTemplate mt = MessageTemplate.MatchProtocol("End");
+        ACLMessage receivedMsg = myAgent.receive(mt);
+        if (receivedMsg != null) {
+            System.out.println(receivedMsg.getContent());
+//            flag = true;
+        }
 //        ожидание сообщ от дистр о вышло/не вышло
     }
 }
