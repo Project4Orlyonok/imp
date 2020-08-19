@@ -16,5 +16,6 @@ public class Const {
         Config config = WorkWithCfgs.unMarshalAny(Config.class,name);
         System.out.println(config);
         return pow.get(time);
+
     }
 }
