@@ -22,7 +22,7 @@ public class ConsumerBeh extends TickerBehaviour {
     @Override
     protected void onTick() {
 
-        double pow = poww.pow(time.getCurrentTime());
+        double pow = poww.pow(time.getCurrentTime(),myAgent.getLocalName());
         ACLMessage message = new ACLMessage(ACLMessage.INFORM);
         message.setContent(String.valueOf(pow));
         message.setProtocol("NeedAuction");

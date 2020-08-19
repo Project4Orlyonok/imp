@@ -28,8 +28,8 @@ public class DistribBeh extends Behaviour {
             switch (receivedMsg.getProtocol()) {
                 case "NeedAuction": {
                     ACLMessage message = new ACLMessage(ACLMessage.INFORM);
-                    AID topic = createTopic(receivedMsg.getSender().getLocalName() + "t");
-                    topic = subsTopic(topic.getLocalName());
+                    AID topic = createTopic(receivedMsg.getSender().getLocalName() + "t"); //дописать
+                    topic = new Topic(myAgent).subsTopic(topic.getLocalName());
                     AID[] resultsAID;
                     resultsAID = DfSearch("Generation", receivedMsg);
 //                    length= resultsAID.length;
@@ -55,8 +55,8 @@ public class DistribBeh extends Behaviour {
                 case "Price": {
                     switch (receivedMsg.getOntology()) {
                         case "Consumer1t": {
-//                            if (receivedMsg.getContent().equals("Left")) kolvo--;
-//                            else {
+                            if (receivedMsg.getContent().equals("Left")) kolvo--;
+                            else {
                             if (count1 == 0) {
                                 minprice1 = Double.parseDouble(receivedMsg.getContent());
                                 agent = receivedMsg.getSender();
@@ -93,6 +93,7 @@ public class DistribBeh extends Behaviour {
 //                            System.out.println(agent.getLocalName()+"   1");
 //                            }
                             }
+                        }
                         }
                         case "Consumer2t": {
 //                            if (receivedMsg.getContent().equals("Left")) kolvo--;
