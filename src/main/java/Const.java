@@ -8,7 +8,7 @@ public class Const {
 
     public void setPow() {
         for (int i = 0; i < 24; i++) {
-            pow.add(Math.random()*100);
+            pow.add(1.0);
         }
 
     }

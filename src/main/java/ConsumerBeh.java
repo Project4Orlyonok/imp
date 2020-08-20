@@ -17,27 +17,38 @@ public class ConsumerBeh extends TickerBehaviour {
     public ConsumerBeh(Agent a, long period, Time time) {
         super(a, period);
         this.time = time;
+
+    }
+
+    @Override
+    public void onStart() {
         poww.setPow();
+        super.onStart();
     }
 
     @Override
     protected void onTick() {
         if (myAgent.getLocalName().equals("Consumer1")) {
-            double pow = poww.pow(time.getCurrentTime(), myAgent.getLocalName())+3;
+            pow = poww.pow(time.getCurrentTime(), myAgent.getLocalName())+3;
         }
         else {
-            double pow = poww.pow(time.getCurrentTime(), myAgent.getLocalName());
+            pow = poww.pow(time.getCurrentTime(), myAgent.getLocalName());
         }
+//        System.out.println(poww.pow(time.getCurrentTime(),myAgent.getLocalName()));
         ACLMessage message = new ACLMessage(ACLMessage.INFORM);
         message.setContent(String.valueOf(pow));
         message.setProtocol("NeedAuction");
         message.addReceiver(myAgent.getAID("Distributor"));
         myAgent.send(message);
+        System.out.println(message);
         MessageTemplate mt = MessageTemplate.MatchProtocol("End");
         ACLMessage receivedMsg = myAgent.receive(mt);
         if (receivedMsg != null) {
-            System.out.println(receivedMsg.getContent()+"   "+myAgent.getLocalName());
+//            System.out.println(receivedMsg.getContent()+"   "+myAgent.getLocalName());
 //            flag = true;
+        }
+        else{
+            block();
         }
 //        ожидание сообщ от дистр о вышло/не вышло
     }
