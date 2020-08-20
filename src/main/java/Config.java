@@ -9,7 +9,7 @@ public class Config {
     @XmlElement
     private String agentName;
     @XmlElementWrapper(name="Power")
-    @XmlElement
+    @XmlElement(name="power")
     private List<ConfigAtr> Power=new ArrayList<>();
 
     public String getAgentName() {

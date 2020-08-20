@@ -1,5 +1,7 @@
 import jade.core.Agent;
 
+import java.util.Random;
+
 public class GenHour {
 
     public double PowHour(String agent, int time) {
@@ -8,7 +10,8 @@ public class GenHour {
         switch (agent) {
             case "Wind": {
                 power=7;
-                pow = Math.random() * power;
+                Random random=new Random();
+                pow = random.nextGaussian() * power;
                 break;
             }
             case "Sun": {

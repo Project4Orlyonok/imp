@@ -1,4 +1,5 @@
 import jade.core.AID;
+import jade.core.Agent;
 import jade.core.ServiceException;
 import jade.core.behaviours.Behaviour;
 import jade.core.messaging.TopicManagementHelper;
@@ -36,11 +37,12 @@ public class DistribBeh extends Behaviour {
 
                     for (AID aid : resultsAID) {
                         message.addReceiver(aid);
-                        message.setProtocol("Start");
-                        message.setContent(topic.getLocalName());
-                        myAgent.send(message);
-//                System.out.println(message);
+                        //                System.out.println(message);
                     }
+                    message.setProtocol("Start");
+                    message.setContent(topic.getLocalName());
+                    myAgent.send(message);
+
                     ACLMessage message1 = new ACLMessage(ACLMessage.INFORM);
                     message1.addReceiver(topic);
                     message1.setProtocol("Power");
@@ -54,10 +56,10 @@ public class DistribBeh extends Behaviour {
                 case "Price": {
                     switch (receivedMsg.getOntology()) {
                         case "Consumer1t": {
-                            Price(receivedMsg, resultsAID.length);
+                            Price(receivedMsg, resultsAID.length,"Consumer1");
                         }
                         case "Consumer2t": {
-                            Price(receivedMsg, resultsAID.length);
+                            Price(receivedMsg, resultsAID.length,"Consumer2");
                         }
 //
                     }
@@ -97,7 +99,7 @@ public class DistribBeh extends Behaviour {
         return resultsAID;
     }
 
-    public void Price(ACLMessage receivedMsg, int length) {
+    public void Price(ACLMessage receivedMsg, int length, String agen) {
         if (receivedMsg.getContent().equals("Left")) kolvo--;
         else {
             if (count1 == 0) {
@@ -112,7 +114,7 @@ public class DistribBeh extends Behaviour {
             count1++;
             if (kolvo == 0) {
                 ACLMessage message1 = new ACLMessage(ACLMessage.INFORM);
-                message1.addReceiver(myAgent.getAID("Consumer1"));
+                message1.addReceiver(myAgent.getAID(agen));
                 message1.setProtocol("End");
 //                                message1.setOntology(topic.getLocalName());
                 message1.setContent("No");
@@ -128,7 +130,7 @@ public class DistribBeh extends Behaviour {
                     count2 = 0;
                     kolvo = length;
                     ACLMessage message1 = new ACLMessage(ACLMessage.INFORM);
-                    message1.addReceiver(myAgent.getAID("Consumer1"));
+                    message1.addReceiver(myAgent.getAID(agen));
                     message1.setProtocol("End");
 //                                message1.setOntology(topic.getLocalName());
                     message1.setContent(String.valueOf(minprice1));

@@ -5,22 +5,24 @@ import java.util.ArrayList;
 public class GenInf {
     public ArrayList<Double> pri = new ArrayList<>();
     public ArrayList<Double> pow = new ArrayList<>();
-    public double nakop;
-    public double minpri,maxnakop;
-    public String agent;
+    public double nakop=0;
+    public double minpri=4,maxnakop=10;
+//    public String agent;
 
-    public GenInf(String agent) {
-        this.agent = agent;
-    }
+
 
     //имя агента в конс
-    public double price(int time){
+    public double price(int time,String agent){
+//минцена разная для всех
+        return minpri*maxnakop/nakop;
+    }
+    public double power(int time,String agent){
         if (agent.equals("System")||agent.equals("Heat")){
             nakop=0;
         }
         nakop+=new GenHour().PowHour(agent,time);
         if (nakop>maxnakop) nakop=maxnakop;
-        return minpri*maxnakop/nakop;
+        return nakop;
     }
 
     public void setPri() {
@@ -44,10 +46,10 @@ public class GenInf {
         return pow.get(time);
     }
 
-    public void powmin(int time,double elem){
-        double lem=pow.get(time);
-        pow.remove(time);
-        pow.add(time,lem-elem);
-    }
+//    public void powmin(int time,double elem){
+//        double lem=pow.get(time);
+//        pow.remove(time);
+//        pow.add(time,lem-elem);
+//    }
 
 }

@@ -20,8 +20,13 @@ public class Main {
 
 //        Const cons=new Const();
 //        cons.setPow();
-//        System.out.println(cons.pow(2,"Consumer1.xml"));
-        GenInf gen=new GenInf("Heat");
-        System.out.println(gen.price(4));
+        Config config=WorkWithCfgs.unMarshalAny(Config.class,"Consumer1.xml");
+        for (ConfigAtr con:config.getPower()){
+            System.out.println(con.getLoad());
+        }
+        //System.out.println(cons.pow(2,"Consumer1.xml"));
+//        GenInf gen=new GenInf("Heat");
+//        System.out.println(gen.price(4));
+//        System.out.println(gen.power(4));
     }
 }

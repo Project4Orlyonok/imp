@@ -5,30 +5,31 @@ import jade.lang.acl.MessageTemplate;
 
 public class GenBehDur extends Behaviour {
     AID topic;
-    GenInf power = new GenInf(myAgent.getLocalName());
+    GenInf power = new GenInf();
     Time time;
 
     public GenBehDur(Time time, AID topic) {
         this.time = time;
         this.topic = topic;
-        power.setPri();
-        power.setPow();
+//        power.setPri();
+//        power.setPow();
     }
 
 
     @Override
     public void action() {
+//        GenInf power=new GenInf(getAgent().getLocalName());
 //        MessageTemplate mt=MessageTemplate.and(MessageTemplate.MatchProtocol("Power"),MessageTemplate.MatchTopic(topic));
         ACLMessage receivedMsg = myAgent.receive();
         if ((receivedMsg != null)) {
             switch (receivedMsg.getProtocol()) {
                 case "Power": {
-                    if (Double.parseDouble(receivedMsg.getContent()) <= power.pow(time.getCurrentTime())) {
+                    if (Double.parseDouble(receivedMsg.getContent()) <= power.power(time.getCurrentTime(),myAgent.getLocalName())) {
                         ACLMessage message = new ACLMessage(ACLMessage.INFORM);
                         message.addReceiver(topic);
                         message.setProtocol("Price");
                         message.setOntology(topic.getLocalName());
-                        message.setContent(String.valueOf(power.pri(time.getCurrentTime())));
+                        message.setContent(String.valueOf(power.price(time.getCurrentTime(),myAgent.getLocalName())));
 //                        System.out.println(message.getContent()+"  "+topic.getLocalName());
                         myAgent.send(message);
                     }
@@ -44,7 +45,7 @@ public class GenBehDur extends Behaviour {
                 }
 
                     case "Winner": {
-                    power.powmin(time.getCurrentTime(), Double.parseDouble(receivedMsg.getContent()));
+//                    power.powmin(time.getCurrentTime(), Double.parseDouble(receivedMsg.getContent()));
 
 //                    System.out.println(receivedMsg.getContent());
                 }
