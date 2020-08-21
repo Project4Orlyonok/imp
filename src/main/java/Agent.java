@@ -18,25 +18,25 @@ public class Agent extends jade.core.Agent {
             }
         });
         switch (getLocalName()) {
-            case "Sun", "Wind", "Heat", "System": {
+            case "Sun":
+            case "Wind":
+            case "Heat":
+            case "System": {
                 dfRegister();
                 addBehaviour(new GenBehStart(time));
                 break;
             }
             case "Distributor": {
-                try {
-                    Thread.sleep(2000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                addBehaviour(new DistribBeh());
+//                try {
+//                    Thread.sleep(2000);
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
+                addBehaviour(new DistribBehStart());
                 break;
             }
-            case "Consumer1" :{
-                addBehaviour(new ConsumerBeh(this, 5000, time));
-                break;
-            }
-            case  "Consumer2": {
+            case "Consumer1":
+            case "Consumer2": {
                 addBehaviour(new ConsumerBeh(this, 5000, time));
                 break;
             }

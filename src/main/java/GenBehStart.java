@@ -10,49 +10,131 @@ public class GenBehStart extends Behaviour {
     public AID topic;
     Time time;
 
+    GenInf power = new GenInf();
+
+
     public GenBehStart(Time time) {
         this.time = time;
     }
 
     @Override
     public void action() {
-//        ACLMessage receivedMsg;
         MessageTemplate mt = MessageTemplate.MatchProtocol("Start");
         ACLMessage receivedMsg = myAgent.receive(mt);
         if (receivedMsg != null) {
-            topic = new Topic(myAgent).subsTopic(receivedMsg.getContent());
+            ACLMessage message = new ACLMessage(ACLMessage.INFORM);
+            topic=subsTopic(receivedMsg.getContent());
+            message.addReceiver(topic);
+            message.setProtocol("Ready");
+            message.setContent("OK");
+            myAgent.send(message);
+            myAgent.addBehaviour(new GenBehDur(time,topic));
+            System.out.println(myAgent.getLocalName()+"  подписался   "+topic.getLocalName());
 //            flag = true;
         }
-//        System.out.println(topic);
-        if (topic!=null) {
-            myAgent.addBehaviour(new GenBehDur(time,topic));
-            }
-
     }
 
     @Override
     public boolean done() {
-        return false;
+        return flag;
     }
 
-//    @Override
-//    public int onEnd() {
-//        myAgent.addBehaviour(new GenBehDur(topic));
-//        return super.onEnd();
-//    }
 
 
-//    private AID subsTopic(String topicName) {
-//        TopicManagementHelper topicHelper = null;
-//        AID jadeTopic = null;
-//        try {
-//            topicHelper = (TopicManagementHelper)
-//                    myAgent.getHelper(TopicManagementHelper.SERVICE_NAME);
-//            jadeTopic = topicHelper.createTopic(topicName);
-//            topicHelper.register(jadeTopic);
-//        } catch (ServiceException e) {
-//            e.printStackTrace();
-//        }
-//        return jadeTopic;
-//    }
+
+    private AID subsTopic(String topicName) {
+        TopicManagementHelper topicHelper = null;
+        AID jadeTopic = null;
+        try {
+            topicHelper = (TopicManagementHelper)
+                    myAgent.getHelper(TopicManagementHelper.SERVICE_NAME);
+            jadeTopic = topicHelper.createTopic(topicName);
+            topicHelper.register(jadeTopic);
+        } catch (ServiceException e) {
+            e.printStackTrace();
+        }
+        return jadeTopic;
+    }
 }
+////        ACLMessage receivedMsg;
+////      //    @Override
+////    public int onEnd() {
+////        myAgent.addBehaviour(new GenBehDur(topic));
+////        return super.onEnd();
+////    }  MessageTemplate mt = MessageTemplate.MatchProtocol("Start");
+//        ACLMessage receivedMsg = myAgent.receive();
+//        if (receivedMsg != null) {
+//            switch (receivedMsg.getProtocol()) {
+////                case "Power": {
+////                    if (Double.parseDouble(receivedMsg.getContent()) <= power.power(time.getCurrentTime(), myAgent.getLocalName())) {
+////                        ACLMessage message = new ACLMessage(ACLMessage.INFORM);
+////                        message.addReceiver(topic);
+////                        message.setProtocol("Price");
+////                        message.setOntology(topic.getLocalName());
+////                        message.setContent(String.valueOf(power.price(time.getCurrentTime(), myAgent.getLocalName())));
+////                        System.out.println(message.getContent() + "  " + topic.getLocalName());
+////                        myAgent.send(message);
+////                    }
+////                    } else {
+////                        ACLMessage message = new ACLMessage(ACLMessage.INFORM);
+////                        message.addReceiver(topic);
+////                        message.setProtocol("Price");
+////                        message.setOntology(topic.getLocalName());
+////                        message.setContent("Left");
+////                        myAgent.send(message);
+////                    }
+////                    break;
+////                }
+//
+//                case "Winner": {
+////                    flag=true;
+////                    System.out.println(receivedMsg);
+////                    power.powmin(time.getCurrentTime(), Double.parseDouble(receivedMsg.getContent()));
+//
+////                    System.out.println(receivedMsg.getContent());
+//                    break;
+//                }
+//                case "Start": {
+////                    System.out.println(receivedMsg);
+//                    topic = subsTopic(receivedMsg.getContent());
+////                    System.out.println(topic);
+////                   отправку подтверждения подписки + выкинуть  в отдельное поведение->
+//                    MessageTemplate mt = MessageTemplate.MatchProtocol("Power");//+топик
+//                    ACLMessage receivedMsg1 = myAgent.receive(mt);
+//                    if ((receivedMsg1 != null)) {
+////                        System.out.println(receivedMsg1);
+////                        System.out.println(receivedMsg1.getContent()+"   "+myAgent.getLocalName());
+////                        System.out.println(Double.parseDouble(receivedMsg1.getContent())+"     "+power.power(time.getCurrentTime(), myAgent.getLocalName())+"    "+myAgent.getLocalName()+"   "+topic.getLocalName());
+//                        if (Double.parseDouble(receivedMsg1.getContent()) <= power.power(time.getCurrentTime(), myAgent.getLocalName())) {
+//
+//                            ACLMessage message = new ACLMessage(ACLMessage.INFORM);
+//                            message.addReceiver(topic);
+//                            message.setProtocol("Price");
+//                            message.setOntology(topic.getLocalName());
+//                            message.setContent(String.valueOf(power.price(time.getCurrentTime(), myAgent.getLocalName())));
+////                        System.out.println(message.getContent()+"  "+topic.getLocalName());
+//                            myAgent.send(message);
+////                            System.out.println(message);
+//                        }
+//                        else{
+//                            ACLMessage message = new ACLMessage(ACLMessage.INFORM);
+//                            message.addReceiver(topic);
+//                            message.setProtocol("Price");
+//                            message.setOntology(topic.getLocalName());
+//                            message.setContent("Left");
+////                        System.out.println(message.getContent()+"  "+topic.getLocalName());
+//                            myAgent.send(message);
+////                            System.out.println(message);
+//                        }
+//
+//                    }
+//                    break;
+//                }
+//            }
+//
+//
+//        } else {
+//            block();
+//        }
+
+

@@ -1,5 +1,5 @@
 public class Time {
-    public int hour = 5000;
+    public int hour = 20000;
     public long start = System.currentTimeMillis();
     public int currentTime;
 

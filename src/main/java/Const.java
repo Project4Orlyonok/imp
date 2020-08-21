@@ -14,9 +14,10 @@ public class Const {
     }
 
     public double pow(int time,String name) {
-//        Config config = WorkWithCfgs.unMarshalAny(Config.class,name);
-//        System.out.println(config);
-        return pow.get(time);
+        Config config = WorkWithCfgs.unMarshalAny(Config.class,name);
+        List<ConfigAtr> conf= config.getPower();
+//        System.out.println(conf.get(time).getLoad());
+        return conf.get(time).getLoad();
 
     }
 }

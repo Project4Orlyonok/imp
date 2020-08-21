@@ -11,15 +11,16 @@ public class GenHour {
             case "Wind": {
                 power=7;
                 Random random=new Random();
-                pow = random.nextGaussian() * power;
+                pow = Math.abs(random.nextGaussian() * power);
                 break;
             }
             case "Sun": {
-                power=6;
-                pow = (Math.random() / 10 - 0.05 + powSun(time)) * power;
+                power=10;
+                pow = Math.abs((Math.random() / 10 - 0.05 + powSun(time)) * power);
                 break;
             }
-            case "System", "Heat": {
+            case "System":
+                case "Heat": {
                 power=4;
                 pow = power;
                 break;

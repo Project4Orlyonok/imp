@@ -1,4 +1,5 @@
 import jade.core.Agent;
+import jade.core.behaviours.Behaviour;
 import jade.core.behaviours.TickerBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
@@ -28,28 +29,38 @@ public class ConsumerBeh extends TickerBehaviour {
 
     @Override
     protected void onTick() {
-        if (myAgent.getLocalName().equals("Consumer1")) {
-            pow = poww.pow(time.getCurrentTime(), myAgent.getLocalName())+3;
-        }
-        else {
-            pow = poww.pow(time.getCurrentTime(), myAgent.getLocalName());
-        }
+
+        pow = poww.pow(time.getCurrentTime(), myAgent.getLocalName()+".xml");
 //        System.out.println(poww.pow(time.getCurrentTime(),myAgent.getLocalName()));
         ACLMessage message = new ACLMessage(ACLMessage.INFORM);
         message.setContent(String.valueOf(pow));
         message.setProtocol("NeedAuction");
         message.addReceiver(myAgent.getAID("Distributor"));
         myAgent.send(message);
-        System.out.println(message);
-        MessageTemplate mt = MessageTemplate.MatchProtocol("End");
-        ACLMessage receivedMsg = myAgent.receive(mt);
-        if (receivedMsg != null) {
-//            System.out.println(receivedMsg.getContent()+"   "+myAgent.getLocalName());
-//            flag = true;
-        }
-        else{
-            block();
-        }
+//        System.out.println(message);
+        myAgent.addBehaviour(new Behaviour() {
+            boolean flag = false;
+
+            @Override
+            public void action() {
+                MessageTemplate mt = MessageTemplate.MatchProtocol("End");
+                ACLMessage receivedMsg = myAgent.receive(mt);
+                if (receivedMsg != null) {
+                    System.out.println(myAgent.getLocalName()+ " купил за  " +receivedMsg.getContent()  );
+                    System.out.println("");
+                    flag = true;
+                }
+            }
+
+            @Override
+            public boolean done() {
+                return flag;
+            }
+        });
+
+//        else{
+//            block();
+//        }
 //        ожидание сообщ от дистр о вышло/не вышло
     }
 }
