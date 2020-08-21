@@ -10,7 +10,14 @@ import jade.lang.acl.ACLMessage;
 
 public class Agent extends jade.core.Agent {
     protected void setup() {
+
         Time time = new Time();
+        Const poww=new Const();
+        poww.setPow();
+        GenInf power = new GenInf(time.getCurrentTime());
+        power.setAll("Consumer1t");
+        power.setAll("Consumer2t");
+
         addBehaviour(new OneShotBehaviour() {
             @Override
             public void action() {
@@ -23,7 +30,7 @@ public class Agent extends jade.core.Agent {
             case "Heat":
             case "System": {
                 dfRegister();
-                addBehaviour(new GenBehStart(time));
+                addBehaviour(new GenBehStart(time,power));
                 break;
             }
             case "Distributor": {
@@ -32,12 +39,14 @@ public class Agent extends jade.core.Agent {
 //                } catch (InterruptedException e) {
 //                    e.printStackTrace();
 //                }
-                addBehaviour(new DistribBehStart());
+                addBehaviour(new DistribBehStart(power,time));
                 break;
             }
             case "Consumer1":
             case "Consumer2": {
-                addBehaviour(new ConsumerBeh(this, 5000, time));
+//                int period=Math.toIntExact(Math.round(time.minute * 60 / poww.pow(time.getCurrentTime(),getLocalName() + ".xml")));
+                int period=time.minute*60;
+                addBehaviour(new ConsumerBeh(this, period, time,poww));
                 break;
             }
         }

@@ -5,6 +5,12 @@ import jade.core.behaviours.Behaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.Map;
+
 public class DistribFinal extends Behaviour {
     AID topic;
     AID[] resultsAID;
@@ -14,12 +20,16 @@ public class DistribFinal extends Behaviour {
     int count = 0,kolvo=0;
     double pow;
     boolean flag = false;
+    json json;
+    Time time;
 
-    public DistribFinal(AID topic, AID[] resultsAID, String consumer,double pow) {
+    public DistribFinal(AID topic, AID[] resultsAID, String consumer,double pow,json json,Time time) {
         this.topic = topic;
         this.resultsAID = resultsAID;
         this.consumer = consumer;
         this.pow=pow;
+        this.json=json;
+        this.time=time;
     }
 
 
@@ -28,7 +38,10 @@ public class DistribFinal extends Behaviour {
         String agen = consumer;
         MessageTemplate mt = MessageTemplate.and(MessageTemplate.MatchProtocol("Price"), MessageTemplate.MatchTopic(topic));
         ACLMessage receivedMsg = myAgent.receive(mt);
+
         if (receivedMsg != null) {
+//            System.out.println(receivedMsg.getSender().getLocalName()+"  предложил в   "+topic.getLocalName()+"  "
+//                +receivedMsg.getOntology()+" за "+ receivedMsg.getContent());
             count++;
 
 //                            System.out.println(receivedMsg);
@@ -52,7 +65,17 @@ public class DistribFinal extends Behaviour {
                 myAgent.send(message);
                 System.out.println(topic.getLocalName() + "   выиграл  " + agent.getLocalName());
 //                System.out.println("");
-
+                Map<String,String> data= json.data(minprice,pow,agent.getLocalName(),agen,time.getCurrentTime());
+                String stroka = json.stroka(data);
+                String fileName ="C:\\Users\\anna\\IdeaProjects\\imp\\Cons.json";
+                try {
+                    FileOutputStream file =new FileOutputStream(fileName);
+                    file.write(stroka.getBytes());
+                    file.flush();
+                    file.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 ACLMessage message1 = new ACLMessage(ACLMessage.INFORM);
                 message1.addReceiver(myAgent.getAID(agen));
                 message1.setProtocol("End");

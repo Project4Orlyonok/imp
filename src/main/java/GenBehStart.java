@@ -9,12 +9,14 @@ public class GenBehStart extends Behaviour {
     boolean flag = false;
     public AID topic;
     Time time;
+    GenInf power;
 
-    GenInf power = new GenInf();
+//    GenInf power = new GenInf();
 
 
-    public GenBehStart(Time time) {
+    public GenBehStart(Time time,GenInf power) {
         this.time = time;
+        this.power=power;
     }
 
     @Override
@@ -28,7 +30,8 @@ public class GenBehStart extends Behaviour {
             message.setProtocol("Ready");
             message.setContent("OK");
             myAgent.send(message);
-            myAgent.addBehaviour(new GenBehDur(time,topic));
+            myAgent.addBehaviour(new GenBehDur(time,topic,myAgent.getLocalName(),power));
+//            power.setAll(topic.getLocalName());
             System.out.println(myAgent.getLocalName()+"  подписался   "+topic.getLocalName());
 //            flag = true;
         }

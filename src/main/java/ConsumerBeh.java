@@ -11,27 +11,27 @@ import java.util.Random;
 
 public class ConsumerBeh extends TickerBehaviour {
     public Time time;
-    Const poww = new Const();
+    Const poww;
     double pow;
 
     //    List<Double> pow=Arrays.asList(1.0,2.4,3.7,4.0,5.8);
-    public ConsumerBeh(Agent a, long period, Time time) {
+    public ConsumerBeh(Agent a, int period, Time time,Const poww) {
         super(a, period);
         this.time = time;
+        this.poww=poww;
 
     }
 
     @Override
     public void onStart() {
-        poww.setPow();
+//        poww.setPow();
         super.onStart();
     }
 
     @Override
     protected void onTick() {
 
-        pow = poww.pow(time.getCurrentTime(), myAgent.getLocalName()+".xml");
-//        System.out.println(poww.pow(time.getCurrentTime(),myAgent.getLocalName()));
+        pow = poww.pow(time.getCurrentTime()/60,myAgent.getLocalName()+".xml");
         ACLMessage message = new ACLMessage(ACLMessage.INFORM);
         message.setContent(String.valueOf(pow));
         message.setProtocol("NeedAuction");
@@ -46,9 +46,17 @@ public class ConsumerBeh extends TickerBehaviour {
                 MessageTemplate mt = MessageTemplate.MatchProtocol("End");
                 ACLMessage receivedMsg = myAgent.receive(mt);
                 if (receivedMsg != null) {
-                    System.out.println(myAgent.getLocalName()+ " купил за  " +receivedMsg.getContent()  );
-                    System.out.println("");
-                    flag = true;
+                    if (!(receivedMsg.getContent().equals("No"))) {
+                        System.out.println(myAgent.getLocalName() + " купил за  " + receivedMsg.getContent());
+                        System.out.println("");
+                        flag = true;
+                    }
+                    else  {
+                        System.out.println(myAgent.getLocalName() + " не купил ");
+                        System.out.println("");
+//                        запрос минимальной мощности
+                        flag = true;
+                    }
                 }
             }
 

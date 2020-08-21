@@ -19,7 +19,16 @@ public class DistribBehStart extends Behaviour {
     AID agent;
     public int count1 = 0, count2 = 0, kolvo1=0,kolvo2=0;
     double pow;
+    GenInf power;
 boolean flag=false;
+    json json=new json();
+    Time time;
+
+    public DistribBehStart(GenInf power,Time time) {
+        this.power = power;
+        this.time=time;
+    }
+
     @Override
     public void action() {
 
@@ -33,6 +42,7 @@ boolean flag=false;
             ACLMessage message = new ACLMessage(ACLMessage.INFORM);
             AID topic = new Topic(myAgent).createTopic(receivedMsg.getSender().getLocalName() + "t"); //дописать
             topic = new Topic(myAgent).subsTopic(topic.getLocalName());
+//            power.setAll(topic.getLocalName());
 
             for (AID aid : resultsAID) {
                 message.addReceiver(aid);
@@ -44,7 +54,7 @@ boolean flag=false;
             System.out.println(receivedMsg.getSender().getLocalName()+"  запросил  "+receivedMsg.getContent());
 //            System.out.println(receivedMsg);
             myAgent.addBehaviour(new DistribContinue(topic,resultsAID,receivedMsg.getSender().getLocalName(),
-                    Double.parseDouble(receivedMsg.getContent())));
+                    Double.parseDouble(receivedMsg.getContent()),power,json,time));
 //            flag=true;
         }
     }

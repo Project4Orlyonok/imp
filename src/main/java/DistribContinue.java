@@ -11,15 +11,27 @@ public class DistribContinue extends Behaviour {
     String consumer;
     double power;
     boolean flag = false;
+    GenInf pow;
+    json json;
+    Time time;
 
-
-    public DistribContinue(AID topic, AID[] resultsAID, String consumer, double power) {
+    public DistribContinue(AID topic, AID[] resultsAID, String consumer, double power, GenInf pow,json json,Time time) {
         this.topic = topic;
         this.resultsAID = resultsAID;
         this.consumer = consumer;
         this.power = power;
+        this.pow = pow;
+        this.json=json;
+        this.time=time;
     }
 
+
+    @Override
+    public void onStart() {
+//        pow.setAll(topic.getLocalName());
+//        System.out.println(pow.LastAsk);
+        super.onStart();
+    }
     @Override
     public void action() {
         MessageTemplate mt = MessageTemplate.and(MessageTemplate.MatchProtocol("Ready"), MessageTemplate.MatchTopic(topic));
@@ -31,7 +43,7 @@ public class DistribContinue extends Behaviour {
             message.setContent(String.valueOf(power));
 
             myAgent.send(message);
-            myAgent.addBehaviour(new DistribFinal(topic, resultsAID, consumer,power));
+            myAgent.addBehaviour(new DistribFinal(topic, resultsAID, consumer,power,json,time));
             flag = true;
         }
     }
@@ -42,3 +54,4 @@ public class DistribContinue extends Behaviour {
     }
 
 }
+//            System.out.println(myAgent.getLocalName()+"  отправил  "+message.getContent());
