@@ -10,11 +10,11 @@ public class GenBehDur extends Behaviour {
     boolean flag = false;
     JsonGen jsonGen;
 
-    public GenBehDur(Time time, AID topic,String agent,GenInf power,JsonGen jsonGen) {
+    public GenBehDur(Time time, AID topic, String agent, GenInf power, JsonGen jsonGen) {
         this.time = time;
         this.topic = topic;
-        this.power=power;
-        this.jsonGen=jsonGen;
+        this.power = power;
+        this.jsonGen = jsonGen;
 //        power.setAll(agent);
 //        power.setPri();
 //        power.setPow();
@@ -33,33 +33,19 @@ public class GenBehDur extends Behaviour {
         ACLMessage receivedMsg = myAgent.receive(mt);
         if ((receivedMsg != null)) {
 //            power.powmin(Double.parseDouble(receivedMsg.getContent()),myAgent.getLocalName());
-            double pow=power.power(time.getCurrentTime(), myAgent.getLocalName(),topic.getLocalName());
+//            System.out.println(power.nakop.get(myAgent.getLocalName()));
+//            double pow = power.power(time.getCurrentTime(), myAgent.getLocalName(), topic.getLocalName());
+//            System.out.println(power.nakop.get(myAgent.getLocalName()));
 //            System.out.println(receivedMsg.getContent() + "  "+topic.getLocalName());
-            if (Double.parseDouble(receivedMsg.getContent()) <= pow) {
-                ACLMessage message = new ACLMessage(ACLMessage.INFORM);
-                message.addReceiver(topic);
-                message.setProtocol("Price");
-                message.setOntology(String.valueOf(pow));
-                message.setContent(String.valueOf(power.price(time.getCurrentTime(), myAgent.getLocalName())));
-                System.out.println(myAgent.getLocalName()+"  предложил в   "+topic.getLocalName()+"  "
-                +message.getOntology()+" за "+ message.getContent());
-                myAgent.send(message);
-
-                power.minpower(Double.parseDouble(receivedMsg.getContent()),myAgent.getLocalName());
-//                System.out.println(power.nakop.get(myAgent.getLocalName())+"  "+myAgent.getLocalName());
-//                power.powmin(Double.parseDouble(receivedMsg.getContent()),myAgent.getLocalName());
-
-            } else {
-                ACLMessage message = new ACLMessage(ACLMessage.INFORM);
-                message.addReceiver(topic);
-                message.setProtocol("Price");
-                message.setOntology(topic.getLocalName());
-                message.setContent("Left");
-                myAgent.send(message);
-                System.out.println(myAgent.getLocalName()+"  вышел из   "+topic.getLocalName());
-            }
-            myAgent.addBehaviour(new GenBehFinal(topic,power,jsonGen,time));
-            flag=true;
+            ACLMessage message = new ACLMessage(ACLMessage.INFORM);
+            message.addReceiver(topic);
+            message.setProtocol("Price");
+            message.setContent(power.power(time.getCurrentTime(),myAgent.getLocalName(), Double.parseDouble(receivedMsg.getContent())));
+            System.out.println(myAgent.getLocalName()+" в "+topic.getLocalName()+" за "+message.getContent());
+            myAgent.send(message);
+            power.minpower(Double.parseDouble(receivedMsg.getContent()),myAgent.getLocalName());
+            myAgent.addBehaviour(new GenBehFinal(topic, power, jsonGen, time));
+            flag = true;
         }
     }
 
@@ -69,7 +55,23 @@ public class GenBehDur extends Behaviour {
     }
 
 }
-
+// if(Double.parseDouble(receivedMsg.getContent())<=pow){
+////                message.setOntology(String.valueOf(pow));
+//                message.setContent(String.valueOf(power.price(time.getCurrentTime(), myAgent.getLocalName())));
+//                System.out.println(myAgent.getLocalName()+"  предложил в   "+topic.getLocalName()+"  "
+//                +message.getOntology()+" за "+ message.getContent());
+//
+//
+//                power.minpower(Double.parseDouble(receivedMsg.getContent()),myAgent.getLocalName());
+////                System.out.println(receivedMsg.getContent()+"  "+myAgent.getLocalName());
+////                System.out.println(power.nakop.get(myAgent.getLocalName())+"  "+myAgent.getLocalName());
+////                power.powmin(Double.parseDouble(receivedMsg.getContent()),myAgent.getLocalName());
+//
+//            } else {
+//                //                message.setOntology(topic.getLocalName());
+//                message.setContent("Left");
+//                System.out.println(myAgent.getLocalName()+"  вышел из   "+topic.getLocalName());
+//            }
 //                    } else {
 //                        ACLMessage message = new ACLMessage(ACLMessage.INFORM);
 //                        message.addReceiver(topic);

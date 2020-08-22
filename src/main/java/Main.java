@@ -35,6 +35,7 @@ public class Main {
 
         map.replace("Wind",7.2);
         map.put("Wind",7.4);
+//        System.out.println(67/60);
 //        System.out.println(map);
 //        System.out.println(map.entrySet().stream().max(Comparator.comparingDouble(double)));
         System.out.println(Collections.max(map.values()));

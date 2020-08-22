@@ -62,7 +62,19 @@ public class ConsumerBeh extends TickerBehaviour {
                                 Double.parseDouble(receivedMsg.getOntology()),
                                 "No",myAgent.getLocalName(),time.getCurrentTime()/60);
 //                        запрос минимальной мощности
-                        flag = true;
+//                        flag = true;
+                        try {
+                            Thread.sleep(600);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        ACLMessage message = new ACLMessage(ACLMessage.INFORM);
+                        message.setContent(String.valueOf(pow));
+                        message.setProtocol("NeedAuction");
+                        message.addReceiver(myAgent.getAID("Distributor"));
+                        myAgent.send(message);
+//                        что-то с выходом 1 раз запросить, если не совсем вышло, то в систему
+
                     }
                     String stroka = jsonCons.stroka(data);
                     String fileName =String.format("C:\\Users\\anna\\IdeaProjects\\imp\\%s.json",myAgent.getLocalName());

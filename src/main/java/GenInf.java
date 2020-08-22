@@ -15,7 +15,7 @@ public class GenInf {
     Map<String, Double> nakop = new HashMap<>();
     Map<String, Double> Power = new HashMap<>();
     public Map<String, Integer> LastAsk = new HashMap<>();
-    public Map<String,Double> DopPower=new HashMap<>();
+    public Map<String, Double> DopPower = new HashMap<>();
     int Starttime;
 
 
@@ -28,36 +28,36 @@ public class GenInf {
 //        LastAsk.put(topic, Starttime);
 
         agent = "Sun";
-        minprice.put(agent, 4.0);
+        minprice.put(agent, 2.0);
         maxnakop.put(agent, 5.0);
-        nakop.put(agent, 0.0);
+        nakop.put(agent, 2.0);
         LastAsk.put(agent, Starttime);
-        Power.put(agent,0.0);
-        DopPower.put(agent,0.0);
+        Power.put(agent, 0.0);
+        DopPower.put(agent, 0.0);
 
         agent = "Wind";
-        minprice.put(agent, 4.0);
+        minprice.put(agent, 2.5);
         maxnakop.put(agent, 5.0);
-        nakop.put(agent, 0.0);
+        nakop.put(agent, 2.0);
         LastAsk.put(agent, Starttime);
-        Power.put(agent,0.0);
-        DopPower.put(agent,0.0);
+        Power.put(agent, 0.0);
+        DopPower.put(agent, 0.0);
 
         agent = "Heat";
-        minprice.put(agent, 4.0);
+        minprice.put(agent, 6.0);
         maxnakop.put(agent, 5.0);
         nakop.put(agent, 0.0);
         LastAsk.put(agent, Starttime);
-        Power.put(agent,0.0);
-        DopPower.put(agent,0.0);
+        Power.put(agent, 0.0);
+        DopPower.put(agent, 0.0);
 
         agent = "System";
-        minprice.put(agent, 4.0);
+        minprice.put(agent, 9.0);
         maxnakop.put(agent, 5.0);
         nakop.put(agent, 0.0);
         LastAsk.put(agent, Starttime);
-        Power.put(agent,0.0);
-        DopPower.put(agent,0.0);
+        Power.put(agent, 0.0);
+        DopPower.put(agent, 0.0);
     }
 
     public double price(int time, String agent) {
@@ -65,15 +65,16 @@ public class GenInf {
         return minprice.get(agent) * maxnakop.get(agent) / nakop.get(agent);
     }
 
-    public double power(int time, String agent, String topic) {//лажа (переползать в минуты)
-        if ((agent.equals("System") || agent.equals("Heat"))) {
-            nakop.replace(agent, 0.0);
-        }
+    public String power(int time, String agent, double zapros) {//лажа (переползать в минуты)
+
         double power;
-        if ((time/60 - LastAsk.get(agent)/60) >= 1) {
+        if ((time / 60 - LastAsk.get(agent) / 60) >= 1) {
             Power.put(agent, new GenHour().PowHour(agent, time / 60) / 60);
+            if ((agent.equals("System") || agent.equals("Heat"))) {
+                nakop.replace(agent, 0.0);
+            }
         }
-//        System.out.println(Power);
+//        System.out.println(Power.get(agent)*60+"  "+agent+"  "+time);
 //        System.out.println(LastAsk.get(agent) + "  time   " + time);
         power = Power.get(agent) * (time - LastAsk.get(agent));
 //        System.out.println(Power.get(agent) *60+"   "+agent);
@@ -81,15 +82,24 @@ public class GenInf {
         if (nakop.get(agent) > maxnakop.get(agent))
             nakop.replace(agent, maxnakop.get(agent));
 //        System.out.println(LastAsk.get(agent)+"  "+agent);
-        LastAsk.put(agent, time);
-//        System.out.println(nakop.get(agent)+"  "+agent);
-        return nakop.get(agent)-DopPower.get(agent);
+        LastAsk.replace(agent, time);
+        double currentpower=(nakop.get(agent) - DopPower.get(agent));
+//        System.out.println(nakop.get(agent) + "  " + agent + "  " + DopPower.get(agent));
+//        System.out.println(currentpower+"  "+agent);
+        if (zapros < (currentpower)) {
+            return String.valueOf(minprice.get(agent) * maxnakop.get(agent)/currentpower*zapros);
+        } else {
+            return "Left";
+        }
     }
-    public double allpower(String agent){
+
+    public double allpower(String agent) {
         return nakop.get(agent);
     }
-    public void minpower(double elem, String agent){
-        DopPower.put(agent,elem);
+
+    public void minpower(double elem, String agent) {
+        DopPower.put(agent, elem);
+//        System.out.println(DopPower.get(agent));
     }
 
     public void powmin(double elem, String agent) {

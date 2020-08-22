@@ -28,11 +28,13 @@ public class GenBehFinal extends Behaviour {
         MessageTemplate mt = MessageTemplate.and(MessageTemplate.MatchProtocol("Winner"), MessageTemplate.MatchTopic(topic));
         ACLMessage receivedMsg = myAgent.receive(mt);
         if (receivedMsg != null) {
+//            System.out.println(power.allpower(myAgent.getLocalName())+"  "+myAgent.getLocalName());
             if ((receivedMsg.getContent().equals(myAgent.getLocalName()))){
                 power.powmin(Double.parseDouble(receivedMsg.getOntology()),myAgent.getLocalName());
-//                System.out.println(receivedMsg.getOntology());
+//                System.out.println(receivedMsg.getOntology()+"  "+myAgent.getLocalName());
             }
             power.minpower(0.0,myAgent.getLocalName());
+//            System.out.println(power.allpower(myAgent.getLocalName())+"  "+myAgent.getLocalName());
             Map<String,String> data= jsonGen.dataGen(power.allpower(myAgent.getLocalName()),
                     myAgent.getLocalName(),time.getCurrentTime()/60);
             String stroka = jsonGen.stroka(data);

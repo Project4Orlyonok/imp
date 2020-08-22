@@ -19,7 +19,8 @@ public class JsonGen {
     }
     public Map<String,String> dataGen(double power,String name,int time){
         Map<String, String> data = new HashMap<>();
-        data.put("Power", String.valueOf(power));
+        data.put("Power Before", String.valueOf(power));
+        data.put("Power ", String.valueOf(power));
         data.put("Name of Generation",name);
         data.put("Time", String.valueOf(time));
         return data;
