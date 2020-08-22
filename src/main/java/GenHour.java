@@ -9,7 +9,7 @@ public class GenHour {
         double power;
         switch (agent) {
             case "Wind": {
-                power=7;
+                power=3;
                 Random random=new Random();
                 pow = Math.abs(random.nextGaussian() * power);
                 break;
@@ -21,7 +21,7 @@ public class GenHour {
             }
             case "System":
                 case "Heat": {
-                power=4;
+                power=5;
                 pow = power;
                 break;
             }

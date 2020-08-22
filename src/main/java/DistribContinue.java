@@ -1,5 +1,4 @@
 import jade.core.AID;
-import jade.core.Agent;
 import jade.core.behaviours.Behaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
@@ -12,10 +11,10 @@ public class DistribContinue extends Behaviour {
     double power;
     boolean flag = false;
     GenInf pow;
-    json json;
+    jsonDistr json;
     Time time;
 
-    public DistribContinue(AID topic, AID[] resultsAID, String consumer, double power, GenInf pow,json json,Time time) {
+    public DistribContinue(AID topic, AID[] resultsAID, String consumer, double power, GenInf pow, jsonDistr json, Time time) {
         this.topic = topic;
         this.resultsAID = resultsAID;
         this.consumer = consumer;

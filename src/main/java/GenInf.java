@@ -1,6 +1,7 @@
 import jade.core.Agent;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,7 +13,9 @@ public class GenInf {
     Map<String, Double> minprice = new HashMap<>();
     Map<String, Double> maxnakop = new HashMap<>();
     Map<String, Double> nakop = new HashMap<>();
+    Map<String, Double> Power = new HashMap<>();
     public Map<String, Integer> LastAsk = new HashMap<>();
+    public Map<String,Double> DopPower=new HashMap<>();
     int Starttime;
 
 
@@ -22,31 +25,39 @@ public class GenInf {
 
     public void setAll(String topic) {
         String agent = "";
-        LastAsk.put(topic, Starttime);
+//        LastAsk.put(topic, Starttime);
 
         agent = "Sun";
         minprice.put(agent, 4.0);
         maxnakop.put(agent, 5.0);
         nakop.put(agent, 0.0);
-//        LastAsk.put(topic, Starttime);
+        LastAsk.put(agent, Starttime);
+        Power.put(agent,0.0);
+        DopPower.put(agent,0.0);
 
         agent = "Wind";
         minprice.put(agent, 4.0);
         maxnakop.put(agent, 5.0);
         nakop.put(agent, 0.0);
-//        LastAsk.put(topic, Starttime);
+        LastAsk.put(agent, Starttime);
+        Power.put(agent,0.0);
+        DopPower.put(agent,0.0);
 
         agent = "Heat";
         minprice.put(agent, 4.0);
         maxnakop.put(agent, 5.0);
         nakop.put(agent, 0.0);
-//        LastAsk.put(topic, Starttime);
+        LastAsk.put(agent, Starttime);
+        Power.put(agent,0.0);
+        DopPower.put(agent,0.0);
 
         agent = "System";
         minprice.put(agent, 4.0);
         maxnakop.put(agent, 5.0);
         nakop.put(agent, 0.0);
-
+        LastAsk.put(agent, Starttime);
+        Power.put(agent,0.0);
+        DopPower.put(agent,0.0);
     }
 
     public double price(int time, String agent) {
@@ -55,19 +66,30 @@ public class GenInf {
     }
 
     public double power(int time, String agent, String topic) {//лажа (переползать в минуты)
-        if (agent.equals("System") || agent.equals("Heat")) {
+        if ((agent.equals("System") || agent.equals("Heat"))) {
             nakop.replace(agent, 0.0);
         }
         double power;
-
-        power = new GenHour().PowHour(agent, time / 60) / 60 * (time - LastAsk.get(topic));
+        if ((time/60 - LastAsk.get(agent)/60) >= 1) {
+            Power.put(agent, new GenHour().PowHour(agent, time / 60) / 60);
+        }
+//        System.out.println(Power);
+//        System.out.println(LastAsk.get(agent) + "  time   " + time);
+        power = Power.get(agent) * (time - LastAsk.get(agent));
+//        System.out.println(Power.get(agent) *60+"   "+agent);
         nakop.replace(agent, nakop.get(agent) + power);
         if (nakop.get(agent) > maxnakop.get(agent))
             nakop.replace(agent, maxnakop.get(agent));
-
-        LastAsk.put(topic, time);
-
+//        System.out.println(LastAsk.get(agent)+"  "+agent);
+        LastAsk.put(agent, time);
+//        System.out.println(nakop.get(agent)+"  "+agent);
+        return nakop.get(agent)-DopPower.get(agent);
+    }
+    public double allpower(String agent){
         return nakop.get(agent);
+    }
+    public void minpower(double elem, String agent){
+        DopPower.put(agent,elem);
     }
 
     public void powmin(double elem, String agent) {

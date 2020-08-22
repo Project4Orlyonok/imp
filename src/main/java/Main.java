@@ -1,5 +1,7 @@
 import java.util.*;
 
+import static sun.swing.MenuItemLayoutHelper.max;
+
 public class Main {
     public static void main(String[] args) {
         Time time = new Time();
@@ -34,8 +36,8 @@ public class Main {
         map.replace("Wind",7.2);
         map.put("Wind",7.4);
 //        System.out.println(map);
-        map.entrySet().stream().sorted(Map.Entry.<String, Double>comparingByValue().reversed());
-//        System.out.println(map);
+//        System.out.println(map.entrySet().stream().max(Comparator.comparingDouble(double)));
+        System.out.println(Collections.max(map.values()));
 //        System.out.println(map.get("Wind"));
 //        Double[][] powers=new Double[4][3];
 //        for (int i=0;i<4;i++){

@@ -4,16 +4,15 @@ import jade.core.behaviours.TickerBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.*;
 
 public class ConsumerBeh extends TickerBehaviour {
     public Time time;
     Const poww;
     double pow;
-
+    JsonCons jsonCons=new JsonCons();
     //    List<Double> pow=Arrays.asList(1.0,2.4,3.7,4.0,5.8);
     public ConsumerBeh(Agent a, int period, Time time,Const poww) {
         super(a, period);
@@ -46,16 +45,34 @@ public class ConsumerBeh extends TickerBehaviour {
                 MessageTemplate mt = MessageTemplate.MatchProtocol("End");
                 ACLMessage receivedMsg = myAgent.receive(mt);
                 if (receivedMsg != null) {
+
+                    Map<String,String> data;
                     if (!(receivedMsg.getContent().equals("No"))) {
                         System.out.println(myAgent.getLocalName() + " купил за  " + receivedMsg.getContent());
                         System.out.println("");
+                        data= jsonCons.data(Double.parseDouble(receivedMsg.getContent()),
+                                Double.parseDouble(receivedMsg.getOntology()),
+                                "Ok",myAgent.getLocalName(),time.getCurrentTime()/60);
                         flag = true;
                     }
                     else  {
                         System.out.println(myAgent.getLocalName() + " не купил ");
                         System.out.println("");
+                        data= jsonCons.data(0.0,
+                                Double.parseDouble(receivedMsg.getOntology()),
+                                "No",myAgent.getLocalName(),time.getCurrentTime()/60);
 //                        запрос минимальной мощности
                         flag = true;
+                    }
+                    String stroka = jsonCons.stroka(data);
+                    String fileName =String.format("C:\\Users\\anna\\IdeaProjects\\imp\\%s.json",myAgent.getLocalName());
+                    try {
+                        FileOutputStream file =new FileOutputStream(fileName);
+                        file.write(stroka.getBytes());
+                        file.flush();
+                        file.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
                 }
             }

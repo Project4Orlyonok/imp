@@ -1,12 +1,8 @@
 import jade.core.AID;
-import jade.core.Agent;
-import jade.core.MessageQueue;
 import jade.core.behaviours.Behaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Map;
@@ -20,10 +16,10 @@ public class DistribFinal extends Behaviour {
     int count = 0,kolvo=0;
     double pow;
     boolean flag = false;
-    json json;
+    jsonDistr json;
     Time time;
 
-    public DistribFinal(AID topic, AID[] resultsAID, String consumer,double pow,json json,Time time) {
+    public DistribFinal(AID topic, AID[] resultsAID, String consumer, double pow, jsonDistr json, Time time) {
         this.topic = topic;
         this.resultsAID = resultsAID;
         this.consumer = consumer;
@@ -65,9 +61,9 @@ public class DistribFinal extends Behaviour {
                 myAgent.send(message);
                 System.out.println(topic.getLocalName() + "   выиграл  " + agent.getLocalName());
 //                System.out.println("");
-                Map<String,String> data= json.data(minprice,pow,agent.getLocalName(),agen,time.getCurrentTime());
+                Map<String,String> data= json.data(minprice,pow,agent.getLocalName(),agen,time.getCurrentTime()/60);
                 String stroka = json.stroka(data);
-                String fileName ="C:\\Users\\anna\\IdeaProjects\\imp\\Cons.json";
+                String fileName ="C:\\Users\\anna\\IdeaProjects\\imp\\Distr.json";
                 try {
                     FileOutputStream file =new FileOutputStream(fileName);
                     file.write(stroka.getBytes());
@@ -76,9 +72,11 @@ public class DistribFinal extends Behaviour {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+
                 ACLMessage message1 = new ACLMessage(ACLMessage.INFORM);
                 message1.addReceiver(myAgent.getAID(agen));
                 message1.setProtocol("End");
+                message1.setOntology(String.valueOf(pow));
                 message1.setContent(String.valueOf(minprice));
                 myAgent.send(message1);
                 flag = true;
@@ -97,6 +95,7 @@ public class DistribFinal extends Behaviour {
                 message.setProtocol("End");
 //                                message1.setOntology(topic.getLocalName());
                 message.setContent("No");
+                message.setOntology(String.valueOf(pow));
                 myAgent.send(message);
                 System.out.println(topic.getLocalName() + "   недостаточно энергии");
                 flag = true;

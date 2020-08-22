@@ -17,7 +17,7 @@ public class Agent extends jade.core.Agent {
         GenInf power = new GenInf(time.getCurrentTime());
         power.setAll("Consumer1t");
         power.setAll("Consumer2t");
-
+//        System.out.println(power.LastAsk);
         addBehaviour(new OneShotBehaviour() {
             @Override
             public void action() {

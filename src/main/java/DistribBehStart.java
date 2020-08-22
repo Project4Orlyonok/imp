@@ -1,16 +1,11 @@
 import jade.core.AID;
-import jade.core.Agent;
-import jade.core.ServiceException;
 import jade.core.behaviours.Behaviour;
-import jade.core.messaging.TopicManagementHelper;
 import jade.domain.DFService;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.domain.FIPAException;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
-
-import java.util.ArrayList;
 
 public class DistribBehStart extends Behaviour {
     //    int length=;
@@ -21,7 +16,7 @@ public class DistribBehStart extends Behaviour {
     double pow;
     GenInf power;
 boolean flag=false;
-    json json=new json();
+    jsonDistr json=new jsonDistr();
     Time time;
 
     public DistribBehStart(GenInf power,Time time) {

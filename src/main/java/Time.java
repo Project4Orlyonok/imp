@@ -1,5 +1,5 @@
 public class Time {
-    public int minute = 100;
+    public int minute = 200;
     public long start = System.currentTimeMillis();
     public int currentTime;
 

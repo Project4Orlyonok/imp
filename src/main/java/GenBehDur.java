@@ -8,11 +8,13 @@ public class GenBehDur extends Behaviour {
     GenInf power;
     Time time;
     boolean flag = false;
+    JsonGen jsonGen;
 
-    public GenBehDur(Time time, AID topic,String agent,GenInf power) {
+    public GenBehDur(Time time, AID topic,String agent,GenInf power,JsonGen jsonGen) {
         this.time = time;
         this.topic = topic;
         this.power=power;
+        this.jsonGen=jsonGen;
 //        power.setAll(agent);
 //        power.setPri();
 //        power.setPow();
@@ -30,8 +32,9 @@ public class GenBehDur extends Behaviour {
         MessageTemplate mt = MessageTemplate.and(MessageTemplate.MatchProtocol("Power"), MessageTemplate.MatchTopic(topic));
         ACLMessage receivedMsg = myAgent.receive(mt);
         if ((receivedMsg != null)) {
+//            power.powmin(Double.parseDouble(receivedMsg.getContent()),myAgent.getLocalName());
             double pow=power.power(time.getCurrentTime(), myAgent.getLocalName(),topic.getLocalName());
-//            System.out.println(pow + "  "+topic.getLocalName()+"   "+myAgent.getLocalName());
+//            System.out.println(receivedMsg.getContent() + "  "+topic.getLocalName());
             if (Double.parseDouble(receivedMsg.getContent()) <= pow) {
                 ACLMessage message = new ACLMessage(ACLMessage.INFORM);
                 message.addReceiver(topic);
@@ -42,6 +45,10 @@ public class GenBehDur extends Behaviour {
                 +message.getOntology()+" за "+ message.getContent());
                 myAgent.send(message);
 
+                power.minpower(Double.parseDouble(receivedMsg.getContent()),myAgent.getLocalName());
+//                System.out.println(power.nakop.get(myAgent.getLocalName())+"  "+myAgent.getLocalName());
+//                power.powmin(Double.parseDouble(receivedMsg.getContent()),myAgent.getLocalName());
+
             } else {
                 ACLMessage message = new ACLMessage(ACLMessage.INFORM);
                 message.addReceiver(topic);
@@ -51,7 +58,7 @@ public class GenBehDur extends Behaviour {
                 myAgent.send(message);
                 System.out.println(myAgent.getLocalName()+"  вышел из   "+topic.getLocalName());
             }
-            myAgent.addBehaviour(new GenBehFinal(topic,power));
+            myAgent.addBehaviour(new GenBehFinal(topic,power,jsonGen,time));
             flag=true;
         }
     }

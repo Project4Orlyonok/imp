@@ -10,6 +10,7 @@ public class GenBehStart extends Behaviour {
     public AID topic;
     Time time;
     GenInf power;
+    JsonGen jsonGen=new JsonGen();
 
 //    GenInf power = new GenInf();
 
@@ -30,7 +31,7 @@ public class GenBehStart extends Behaviour {
             message.setProtocol("Ready");
             message.setContent("OK");
             myAgent.send(message);
-            myAgent.addBehaviour(new GenBehDur(time,topic,myAgent.getLocalName(),power));
+            myAgent.addBehaviour(new GenBehDur(time,topic,myAgent.getLocalName(),power,jsonGen));
 //            power.setAll(topic.getLocalName());
             System.out.println(myAgent.getLocalName()+"  подписался   "+topic.getLocalName());
 //            flag = true;
