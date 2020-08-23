@@ -9,8 +9,8 @@ public class JsonCons {
     JSONObject Json= new JSONObject();
     JSONArray JsonArray=new JSONArray();
 
-    public  String stroka(Map<String, String> data){
-//        Json.put("name","dis");
+    public  String stroka(Map<String, String> data,String name){
+        Json.put("name",name);
 //        Map<String, Double> minprice = new HashMap<>();
         JsonArray.add(data);
         Json.put("data",JsonArray);
@@ -22,7 +22,7 @@ public class JsonCons {
         data.put("Price", String.valueOf(price));
         data.put("Power", String.valueOf(power));
         data.put("Verdict",verdict);
-        data.put("Name",name);
+
         data.put("Time", String.valueOf(time));
         return data;
     }

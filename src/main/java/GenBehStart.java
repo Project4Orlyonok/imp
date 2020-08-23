@@ -6,16 +6,16 @@ import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 
 public class GenBehStart extends Behaviour {
-    boolean flag = false;
+    boolean flag = false;//private+имена
     public AID topic;
     Time time;
-    GenInf power;
+    GenerationInfo power;
     JsonGen jsonGen=new JsonGen();
 
 //    GenInf power = new GenInf();
 
 
-    public GenBehStart(Time time,GenInf power) {
+    public GenBehStart(Time time, GenerationInfo power) {
         this.time = time;
         this.power=power;
     }
@@ -26,12 +26,14 @@ public class GenBehStart extends Behaviour {
         ACLMessage receivedMsg = myAgent.receive(mt);
         if (receivedMsg != null) {
             ACLMessage message = new ACLMessage(ACLMessage.INFORM);
-            topic=subsTopic(receivedMsg.getContent());
+            topic=subsTopic(receivedMsg.getContent());//уйти от этого
             message.addReceiver(topic);
             message.setProtocol("Ready");
             message.setContent("OK");
+//            message.setOntology(receivedMsg.getOntology());
             myAgent.send(message);
-            myAgent.addBehaviour(new GenBehDur(time,topic,myAgent.getLocalName(),power,jsonGen));
+//            System.out.println(message.getOntology()+"  genstart  "+topic.getLocalName());
+            myAgent.addBehaviour(new GenBehDur(time,topic,  myAgent.getLocalName(),power,jsonGen));
 //            power.setAll(topic.getLocalName());
             System.out.println(myAgent.getLocalName()+"  подписался   "+topic.getLocalName());
 //            flag = true;

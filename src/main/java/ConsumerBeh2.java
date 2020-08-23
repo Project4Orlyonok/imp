@@ -4,20 +4,15 @@ import jade.core.behaviours.TickerBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
-
 public class ConsumerBeh2 extends TickerBehaviour {
     public Time time;
-    Const poww;
+    ParsConfig poww;
     double pow;
     int StartTime;
     double power=0;
     double period;
     //    List<Double> pow=Arrays.asList(1.0,2.4,3.7,4.0,5.8);
-    public ConsumerBeh2(Agent a, int period, Time time, Const poww) {
+    public ConsumerBeh2(Agent a, int period, Time time, ParsConfig poww) {
         super(a, period);
         this.time = time;
         this.poww = poww;

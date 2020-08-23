@@ -26,6 +26,6 @@
         <power time="22" load="10.0"/>
         <power time="23" load="6.0"/>
         <power time="24" load="4.0"/>
-        <power time="0" load="100.0"/>
+        <power time="0" load="2.0"/>
     </Power>
 </agentConfig>

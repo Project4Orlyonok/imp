@@ -10,18 +10,18 @@ import jade.lang.acl.MessageTemplate;
 public class DistribBehStart extends Behaviour {
     //    int length=;
 //    Double[][] price=new Double[4][2];
-    double minprice1, minprice2;
-    AID agent;
-    public int count1 = 0, count2 = 0, kolvo1=0,kolvo2=0;
-    double pow;
-    GenInf power;
-boolean flag=false;
-    jsonDistr json=new jsonDistr();
-    Time time;
 
-    public DistribBehStart(GenInf power,Time time) {
-        this.power = power;
-        this.time=time;
+    private AID agent;
+    //    public int count1 = 0, count2 = 0, kolvo1 = 0, kolvo2 = 0;
+//   private double pow;
+    private GenerationInfo genPower;
+    private boolean flag = false;
+    private jsonDistr json = new jsonDistr();
+    private Time time;
+
+    public DistribBehStart(GenerationInfo genPower, Time time) {
+        this.genPower = genPower;
+        this.time = time;
     }
 
     @Override
@@ -30,29 +30,29 @@ boolean flag=false;
         MessageTemplate mt = MessageTemplate.MatchProtocol("NeedAuction");
         ACLMessage receivedMsg = myAgent.receive(mt);
         AID[] resultsAID;
+//        поиск агентов, зарегестрированных в DF с генерацией
         resultsAID = DfSearch("Generation");
-//        kolvo1 = 0;
+
         if (receivedMsg != null) {
 
             ACLMessage message = new ACLMessage(ACLMessage.INFORM);
-            AID topic = new Topic(myAgent).createTopic(receivedMsg.getSender().getLocalName() + "t"); //дописать
+            AID topic = new Topic(myAgent).createTopic(receivedMsg.getSender().getLocalName() + "t");
             topic = new Topic(myAgent).subsTopic(topic.getLocalName());
-//            power.setAll(topic.getLocalName());
-
-            for (AID aid : resultsAID) {
-                message.addReceiver(aid);
-                //                System.out.println(message);
-            }
             message.setProtocol("Start");
             message.setContent(topic.getLocalName());
             myAgent.send(message);
-            System.out.println(receivedMsg.getSender().getLocalName()+"  запросил  "+receivedMsg.getContent());
-//            System.out.println(receivedMsg);
-            myAgent.addBehaviour(new DistribContinue(topic,resultsAID,receivedMsg.getSender().getLocalName(),
-                    Double.parseDouble(receivedMsg.getContent()),power,json,time));
-//            flag=true;
+
+            for (AID aid : resultsAID) {
+                message.addReceiver(aid);
+            }
+
+            System.out.println(receivedMsg.getSender().getLocalName() + "  запросил  " + receivedMsg.getContent());
+//            создание нового
+            myAgent.addBehaviour(new DistribContinue(topic, resultsAID, receivedMsg.getSender().getLocalName(),
+                    Double.parseDouble(receivedMsg.getContent()), genPower, json, time, receivedMsg.getOntology()));
         }
     }
+
     @Override
     public boolean done() {
         return flag;
@@ -64,6 +64,7 @@ boolean flag=false;
         ServiceDescription dfs = new ServiceDescription();
         dfs.setType(type);
         dfc.addServices(dfs);
+
 
         DFAgentDescription[] results = new DFAgentDescription[0];
         try {
@@ -79,6 +80,22 @@ boolean flag=false;
         return resultsAID;
     }
 
+    //            message.setOntology(receivedMsg.getOntology());
+
+//            power.setAll(topic.getLocalName());
+
+
+//            System.out.println(message.getOntology()+"  disstart  "+topic.getLocalName());
+
+//                System.out.println(receivedMsg.getOntology()+"  "+receivedMsg.getSender().getLocalName());
+    //                System.out.println(message);
+    //            System.out.println(receivedMsg);
+//            myAgent.addBehaviour(new DistribContinue(topic,resultsAID,receivedMsg.getSender().getLocalName(),
+//                    Double.parseDouble(receivedMsg.getContent()),power,json,time));
+//            flag=true;
+    //        System.out.println(type);
+//        AID[] systemResults = DfSearch("System");
+//        kolvo1 = 0;
 ////                    System.out.println(message);
 ////                    try {
 ////                        Thread.sleep(100);

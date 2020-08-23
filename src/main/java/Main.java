@@ -1,7 +1,5 @@
 import java.util.*;
 
-import static sun.swing.MenuItemLayoutHelper.max;
-
 public class Main {
     public static void main(String[] args) {
         Time time = new Time();
@@ -21,9 +19,9 @@ public class Main {
 //        });
 //        Time time=new Time();
 //        some.start();
-
-        Const cons=new Const();
-        cons.setPow();
+//
+//        ParsConfig cons=new ParsConfig();
+//        cons.setPow();
 //        Config config=WorkWithCfgs.unMarshalAny(Config.class,"Consumer1.xml");
 //        for (ConfigAtr con:config.getPower()){
 //            System.out.println(con.getLoad());

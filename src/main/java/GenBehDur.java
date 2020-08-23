@@ -3,14 +3,15 @@ import jade.core.behaviours.Behaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 
-public class GenBehDur extends Behaviour {
+public class GenBehDur extends Behaviour {//не dur
     AID topic;
-    GenInf power;
+    GenerationInfo power;
     Time time;
     boolean flag = false;
     JsonGen jsonGen;
+    double pow;
 
-    public GenBehDur(Time time, AID topic, String agent, GenInf power, JsonGen jsonGen) {
+    public GenBehDur(Time time, AID topic, String agent, GenerationInfo power, JsonGen jsonGen) {//убрать агента
         this.time = time;
         this.topic = topic;
         this.power = power;
@@ -20,11 +21,7 @@ public class GenBehDur extends Behaviour {
 //        power.setPow();
     }
 
-    @Override
-    public void onStart() {
-//        power.setAll(topic.getLocalName());
-        super.onStart();
-    }
+
 
     @Override
     public void action() {
@@ -40,10 +37,27 @@ public class GenBehDur extends Behaviour {
             ACLMessage message = new ACLMessage(ACLMessage.INFORM);
             message.addReceiver(topic);
             message.setProtocol("Price");
-            message.setContent(power.power(time.getCurrentTime(),myAgent.getLocalName(), Double.parseDouble(receivedMsg.getContent())));
-            System.out.println(myAgent.getLocalName()+" в "+topic.getLocalName()+" за "+message.getContent());
+
+//            if (myAgent.getLocalName().equals("System")) {
+//                pow = Double.parseDouble(power.FormPrice(time.getCurrentTime(), myAgent.getLocalName(), 0.0));
+//                System.out.println(myAgent.getLocalName()+"  "+pow);                                                      ;
+//            }//спорный момент<-
+
+//            System.out.println(receivedMsg);
+//            System.out.println(receivedMsg.getOntology()+"gendur");
+            boolean smth=(((!receivedMsg.getOntology().equals("System")) && (myAgent.getLocalName().equals("System"))) || //+comment
+                    ((receivedMsg.getOntology().equals("System")) && (!myAgent.getLocalName().equals("System"))));
+//            System.out.println(receivedMsg.getOntology()+"  "+myAgent.getLocalName()+"  "+smth);
+            if (smth) {//+comment
+                message.setContent("Left");
+
+            } else {
+                String price=power.FormPrice(time.getCurrentTime(), myAgent.getLocalName(), Double.parseDouble(receivedMsg.getContent()));
+                message.setContent(price);
+            }
+            System.out.println(myAgent.getLocalName() + " в " + topic.getLocalName() + " за " + message.getContent());
             myAgent.send(message);
-            power.minpower(Double.parseDouble(receivedMsg.getContent()),myAgent.getLocalName());
+            power.reservePower(Double.parseDouble(receivedMsg.getContent()), myAgent.getLocalName());//comment
             myAgent.addBehaviour(new GenBehFinal(topic, power, jsonGen, time));
             flag = true;
         }

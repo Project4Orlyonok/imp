@@ -9,77 +9,97 @@ import java.io.IOException;
 import java.util.*;
 
 public class ConsumerBeh extends TickerBehaviour {
-    public Time time;
-    Const poww;
-    double pow;
-    JsonCons jsonCons=new JsonCons();
+    private Time time;
+    private ParsConfig getConfig;//private+name
+    private double requementPower;
+    private int period;
+    private JsonCons jsonCons = new JsonCons();
+    private int StartTime;
+
     //    List<Double> pow=Arrays.asList(1.0,2.4,3.7,4.0,5.8);
-    public ConsumerBeh(Agent a, int period, Time time,Const poww) {
+    public ConsumerBeh(Agent a, int period, Time time, ParsConfig getConfig) {
         super(a, period);
         this.time = time;
-        this.poww=poww;
+        this.getConfig = getConfig;
+        this.period = period;
 
     }
 
-    @Override
-    public void onStart() {
-//        poww.setPow();
-        super.onStart();
-    }
 
     @Override
     protected void onTick() {
-
-        pow = poww.pow(time.getCurrentTime()/60,myAgent.getLocalName()+".xml");
-        ACLMessage message = new ACLMessage(ACLMessage.INFORM);
-        message.setContent(String.valueOf(pow));
+        StartTime = time.getCurrentTime();
+//        requementPower = 1.0;
+        requementPower = getConfig.pow(time.getCurrentTime() / 60 %24, myAgent.getLocalName() + ".xml");
+        ACLMessage message = new ACLMessage(ACLMessage.INFORM);//имена сообщениям
+        message.setContent(String.valueOf(requementPower));
         message.setProtocol("NeedAuction");
+        message.setOntology("All");
         message.addReceiver(myAgent.getAID("Distributor"));
         myAgent.send(message);
 //        System.out.println(message);
-        myAgent.addBehaviour(new Behaviour() {
+
+        myAgent.addBehaviour(new Behaviour() {//+comment
             boolean flag = false;
 
             @Override
             public void action() {
                 MessageTemplate mt = MessageTemplate.MatchProtocol("End");
                 ACLMessage receivedMsg = myAgent.receive(mt);
-                if (receivedMsg != null) {
 
-                    Map<String,String> data;
+                if (receivedMsg != null) {
+                    Map<String, String> data;
+
                     if (!(receivedMsg.getContent().equals("No"))) {
                         System.out.println(myAgent.getLocalName() + " купил за  " + receivedMsg.getContent());
                         System.out.println("");
-                        data= jsonCons.data(Double.parseDouble(receivedMsg.getContent()),
+                        data = jsonCons.data(Double.parseDouble(receivedMsg.getContent()),
                                 Double.parseDouble(receivedMsg.getOntology()),
-                                "Ok",myAgent.getLocalName(),time.getCurrentTime()/60);
+                                "Ok", myAgent.getLocalName(), time.getCurrentTime() / 60);
+
                         flag = true;
-                    }
-                    else  {
+                    } else {
                         System.out.println(myAgent.getLocalName() + " не купил ");
                         System.out.println("");
-                        data= jsonCons.data(0.0,
+                        data = jsonCons.data(0.0,
                                 Double.parseDouble(receivedMsg.getOntology()),
-                                "No",myAgent.getLocalName(),time.getCurrentTime()/60);
+                                "No", myAgent.getLocalName(), time.getCurrentTime() / 60);
+//                        System.out.println(time.getCurrentTime()+"  "+StartTime+"  "+myAgent.getLocalName()+"  "+period);
+                        if (time.getCurrentTime() - StartTime < 0.75 * period/1000) {
+
 //                        запрос минимальной мощности
 //                        flag = true;
-                        try {
-                            Thread.sleep(600);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
+                            try {
+                                Thread.sleep(time.minute*5);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+
+                            ACLMessage message = new ACLMessage(ACLMessage.INFORM);
+                            message.setContent(String.valueOf(requementPower));
+                            message.addReceiver(myAgent.getAID("Distributor"));
+                            message.setProtocol("NeedAuction");
+                            message.setOntology("All");
+//                            message.addReceiver(myAgent.getAID("Distributor"));
+                            myAgent.send(message);
+
+                        } else {
+                            ACLMessage message = new ACLMessage(ACLMessage.INFORM);
+                            message.setContent(String.valueOf(requementPower));
+                            message.addReceiver(myAgent.getAID("Distributor"));
+                            message.setProtocol("NeedAuction");
+                            message.setOntology("System");
+                            myAgent.send(message);
+//                            flag=true;
                         }
-                        ACLMessage message = new ACLMessage(ACLMessage.INFORM);
-                        message.setContent(String.valueOf(pow));
-                        message.setProtocol("NeedAuction");
-                        message.addReceiver(myAgent.getAID("Distributor"));
-                        myAgent.send(message);
 //                        что-то с выходом 1 раз запросить, если не совсем вышло, то в систему
 
                     }
-                    String stroka = jsonCons.stroka(data);
-                    String fileName =String.format("C:\\Users\\anna\\IdeaProjects\\imp\\%s.json",myAgent.getLocalName());
+
+                    String stroka = jsonCons.stroka(data, myAgent.getLocalName());
+                    String fileName = String.format("C:\\Users\\anna\\IdeaProjects\\imp\\%s.json", myAgent.getLocalName());
                     try {
-                        FileOutputStream file =new FileOutputStream(fileName);
+                        FileOutputStream file = new FileOutputStream(fileName);
                         file.write(stroka.getBytes());
                         file.flush();
                         file.close();
@@ -100,4 +120,6 @@ public class ConsumerBeh extends TickerBehaviour {
 //        }
 //        ожидание сообщ от дистр о вышло/не вышло
     }
+
+
 }

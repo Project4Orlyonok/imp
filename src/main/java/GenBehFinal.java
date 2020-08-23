@@ -8,13 +8,13 @@ import java.io.IOException;
 import java.util.Map;
 
 public class GenBehFinal extends Behaviour {
-    boolean flag=false;
+    boolean flag=false;//private
     AID topic;
-    GenInf power;
+    GenerationInfo power;
     JsonGen jsonGen;
     Time time;
 
-    public GenBehFinal(AID topic, GenInf power,JsonGen jsonGen,Time time) {
+    public GenBehFinal(AID topic, GenerationInfo power, JsonGen jsonGen, Time time) {
         this.topic = topic;
         this.power = power;
         this.jsonGen=jsonGen;
@@ -25,19 +25,25 @@ public class GenBehFinal extends Behaviour {
 
     @Override
     public void action() {
+        double power1,power2;//иначе
         MessageTemplate mt = MessageTemplate.and(MessageTemplate.MatchProtocol("Winner"), MessageTemplate.MatchTopic(topic));
         ACLMessage receivedMsg = myAgent.receive(mt);
+
         if (receivedMsg != null) {
+            power1=power.allPower(myAgent.getLocalName());//comment
 //            System.out.println(power.allpower(myAgent.getLocalName())+"  "+myAgent.getLocalName());
-            if ((receivedMsg.getContent().equals(myAgent.getLocalName()))){
-                power.powmin(Double.parseDouble(receivedMsg.getOntology()),myAgent.getLocalName());
+
+            if ((receivedMsg.getContent().equals(myAgent.getLocalName()))){//+comment
+                power.minPower(Double.parseDouble(receivedMsg.getOntology()),myAgent.getLocalName());
 //                System.out.println(receivedMsg.getOntology()+"  "+myAgent.getLocalName());
             }
-            power.minpower(0.0,myAgent.getLocalName());
+
+            power2=power.allPower(myAgent.getLocalName());//+comment
+            power.reservePower(-Double.parseDouble(receivedMsg.getOntology()),myAgent.getLocalName());//+comment
 //            System.out.println(power.allpower(myAgent.getLocalName())+"  "+myAgent.getLocalName());
-            Map<String,String> data= jsonGen.dataGen(power.allpower(myAgent.getLocalName()),
-                    myAgent.getLocalName(),time.getCurrentTime()/60);
-            String stroka = jsonGen.stroka(data);
+
+            Map<String,String> data= jsonGen.dataGen(power1,power2,time.getCurrentTime()/60%24);//+comment
+            String stroka = jsonGen.stroka(data,myAgent.getLocalName());
             String fileName =String.format("C:\\Users\\anna\\IdeaProjects\\imp\\%s.json",myAgent.getLocalName());
             try {
                 FileOutputStream file =new FileOutputStream(fileName);
@@ -47,6 +53,7 @@ public class GenBehFinal extends Behaviour {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+
             flag = true;
         }
     }

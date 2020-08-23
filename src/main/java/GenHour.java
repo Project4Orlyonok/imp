@@ -5,23 +5,27 @@ import java.util.Random;
 public class GenHour {
 
     public double PowHour(String agent, int time) {
-        double pow=0;
+        double pow = 0;
         double power;
         switch (agent) {
             case "Wind": {
-                power=3;
-                Random random=new Random();
+                power = 28.2;
+                Random random = new Random();
                 pow = Math.abs(random.nextGaussian() * power);
                 break;
             }
             case "Sun": {
-                power=10;
-                pow = Math.abs((Math.random() / 10 - 0.05 + powSun(time)) * power);
+                power = 28;
+                pow = Math.abs(((Math.random() / 10 - 0.05 + 1) * powSun(time)) * power);
                 break;
             }
-            case "System":
-                case "Heat": {
-                power=5;
+            case "System": {
+                power = 2000100;
+                pow = power;
+                break;
+            }
+            case "Heat": {
+                power = 9;
                 pow = power;
                 break;
             }

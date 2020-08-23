@@ -42,7 +42,7 @@ public class DistribFinal extends Behaviour {
 
 //                            System.out.println(receivedMsg);
             if (!(receivedMsg.getContent().equals("Left"))) {
-                kolvo++;
+                kolvo++;//name+//+comment
 
                 if (minprice > (Double.parseDouble(receivedMsg.getContent()))) {
                     minprice = (Double.parseDouble(receivedMsg.getContent()));
@@ -61,6 +61,7 @@ public class DistribFinal extends Behaviour {
                 myAgent.send(message);
                 System.out.println(topic.getLocalName() + "   выиграл  " + agent.getLocalName());
 //                System.out.println("");
+
                 Map<String,String> data= json.data(minprice,pow,agent.getLocalName(),agen,time.getCurrentTime()/60);
                 String stroka = json.stroka(data);
                 String fileName ="C:\\Users\\anna\\IdeaProjects\\imp\\Distr.json";
