@@ -3,7 +3,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 
 @XmlAccessorType(XmlAccessType.FIELD)
-
+//класс для работы с config
 public class ConfigAtr {
     @XmlAttribute
     private int time;

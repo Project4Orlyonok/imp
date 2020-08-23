@@ -3,7 +3,6 @@ import jade.core.behaviours.Behaviour;
 import jade.core.behaviours.TickerBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
-
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.*;
@@ -29,17 +28,20 @@ public class ConsumerBeh extends TickerBehaviour {
     @Override
     protected void onTick() {
         StartTime = time.getCurrentTime();
-//        requementPower = 1.0;
-        requementPower = getConfig.pow(time.getCurrentTime() / 60 %24, myAgent.getLocalName() + ".xml");
+
+//        запрос требуемой мощности на ближайший отрезок времени:
+
+        requementPower = 1.0;
+//        requementPower = getConfig.pow(time.getCurrentTime() / 60, myAgent.getLocalName() + ".xml");
         ACLMessage message = new ACLMessage(ACLMessage.INFORM);//имена сообщениям
         message.setContent(String.valueOf(requementPower));
         message.setProtocol("NeedAuction");
         message.setOntology("All");
         message.addReceiver(myAgent.getAID("Distributor"));
         myAgent.send(message);
-//        System.out.println(message);
 
-        myAgent.addBehaviour(new Behaviour() {//+comment
+//        новое поведение, ожидающее сообщений о вердикте сделки, если необходимо, запрашивает еще раз
+        myAgent.addBehaviour(new Behaviour() {
             boolean flag = false;
 
             @Override
@@ -64,13 +66,11 @@ public class ConsumerBeh extends TickerBehaviour {
                         data = jsonCons.data(0.0,
                                 Double.parseDouble(receivedMsg.getOntology()),
                                 "No", myAgent.getLocalName(), time.getCurrentTime() / 60);
-//                        System.out.println(time.getCurrentTime()+"  "+StartTime+"  "+myAgent.getLocalName()+"  "+period);
-                        if (time.getCurrentTime() - StartTime < 0.75 * period/1000) {
+                        if (time.getCurrentTime() - StartTime < 0.75 * period / 1000) {
 
 //                        запрос минимальной мощности
-//                        flag = true;
                             try {
-                                Thread.sleep(time.minute*5);
+                                Thread.sleep(time.minute * 5);
                             } catch (InterruptedException e) {
                                 e.printStackTrace();
                             }
@@ -80,7 +80,6 @@ public class ConsumerBeh extends TickerBehaviour {
                             message.addReceiver(myAgent.getAID("Distributor"));
                             message.setProtocol("NeedAuction");
                             message.setOntology("All");
-//                            message.addReceiver(myAgent.getAID("Distributor"));
                             myAgent.send(message);
 
                         } else {
@@ -90,9 +89,8 @@ public class ConsumerBeh extends TickerBehaviour {
                             message.setProtocol("NeedAuction");
                             message.setOntology("System");
                             myAgent.send(message);
-//                            flag=true;
                         }
-//                        что-то с выходом 1 раз запросить, если не совсем вышло, то в систему
+//
 
                     }
 
@@ -115,10 +113,6 @@ public class ConsumerBeh extends TickerBehaviour {
             }
         });
 
-//        else{
-//            block();
-//        }
-//        ожидание сообщ от дистр о вышло/не вышло
     }
 
 

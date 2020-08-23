@@ -1,17 +1,15 @@
-import netscape.javascript.JSObject;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
-
-public class jsonDistr {
+//класс для работы с json
+public class JsonDistr {
     JSONObject Json= new JSONObject();
     JSONArray JsonArray=new JSONArray();
 
     public  String stroka(Map<String, String> data){
         Json.put("name","dis");
-//        Map<String, Double> minprice = new HashMap<>();
         JsonArray.add(data);
         Json.put("data",JsonArray);
         return Json.toJSONString();

@@ -4,7 +4,7 @@ import java.util.List;
 
 @XmlRootElement(name = "agentConfig")
 @XmlAccessorType(XmlAccessType.FIELD)
-
+//класс для работы с config
 public class Config {
     @XmlElement
     private String agentName;

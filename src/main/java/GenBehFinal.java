@@ -8,45 +8,46 @@ import java.io.IOException;
 import java.util.Map;
 
 public class GenBehFinal extends Behaviour {
-    boolean flag=false;//private
-    AID topic;
-    GenerationInfo power;
-    JsonGen jsonGen;
-    Time time;
+    private boolean flag = false;//private
+    private AID topic;
+    private GenerationInfo generationPower;
+    private JsonGen jsonGen;
+    private Time time;
 
-    public GenBehFinal(AID topic, GenerationInfo power, JsonGen jsonGen, Time time) {
+    public GenBehFinal(AID topic, GenerationInfo generationPower, JsonGen jsonGen, Time time) {
         this.topic = topic;
-        this.power = power;
-        this.jsonGen=jsonGen;
-        this.time=time;
+        this.generationPower = generationPower;
+        this.jsonGen = jsonGen;
+        this.time = time;
     }
-
 
 
     @Override
     public void action() {
-        double power1,power2;//иначе
+        double powerBefore, powerAfter;
         MessageTemplate mt = MessageTemplate.and(MessageTemplate.MatchProtocol("Winner"), MessageTemplate.MatchTopic(topic));
         ACLMessage receivedMsg = myAgent.receive(mt);
 
         if (receivedMsg != null) {
-            power1=power.allPower(myAgent.getLocalName());//comment
-//            System.out.println(power.allpower(myAgent.getLocalName())+"  "+myAgent.getLocalName());
 
-            if ((receivedMsg.getContent().equals(myAgent.getLocalName()))){//+comment
-                power.minPower(Double.parseDouble(receivedMsg.getOntology()),myAgent.getLocalName());
-//                System.out.println(receivedMsg.getOntology()+"  "+myAgent.getLocalName());
+//            запрос полной мощности без учета зарезервированной до сделки
+            powerBefore = generationPower.allPower(myAgent.getLocalName());
+
+            if ((receivedMsg.getContent().equals(myAgent.getLocalName()))) {
+                //вычитание проданной мощности при победе
+                generationPower.minPower(Double.parseDouble(receivedMsg.getOntology()), myAgent.getLocalName());
+//
             }
+//            запрос полной мощности без учета зарезервированной после сделки
+            powerAfter = generationPower.allPower(myAgent.getLocalName());//+comment
+            generationPower.reservePower(-Double.parseDouble(receivedMsg.getOntology()), myAgent.getLocalName());
 
-            power2=power.allPower(myAgent.getLocalName());//+comment
-            power.reservePower(-Double.parseDouble(receivedMsg.getOntology()),myAgent.getLocalName());//+comment
-//            System.out.println(power.allpower(myAgent.getLocalName())+"  "+myAgent.getLocalName());
-
-            Map<String,String> data= jsonGen.dataGen(power1,power2,time.getCurrentTime()/60%24);//+comment
-            String stroka = jsonGen.stroka(data,myAgent.getLocalName());
-            String fileName =String.format("C:\\Users\\anna\\IdeaProjects\\imp\\%s.json",myAgent.getLocalName());
+            //создание словаря, содержащего информацию о мощности до сделки, после сделки, о времени для текущего агента и запись его в файл
+            Map<String, String> data = jsonGen.dataGen(powerBefore, powerAfter, time.getCurrentTime() / 60 % 24);
+            String stroka = jsonGen.stroka(data, myAgent.getLocalName());
+            String fileName = String.format("C:\\Users\\anna\\IdeaProjects\\imp\\%s.json", myAgent.getLocalName());
             try {
-                FileOutputStream file =new FileOutputStream(fileName);
+                FileOutputStream file = new FileOutputStream(fileName);
                 file.write(stroka.getBytes());
                 file.flush();
                 file.close();

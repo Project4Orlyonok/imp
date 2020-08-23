@@ -2,7 +2,7 @@ import jade.core.AID;
 import jade.core.Agent;
 import jade.core.ServiceException;
 import jade.core.messaging.TopicManagementHelper;
-
+//класс для работы с Topic
 public class Topic {
     public Agent agent;
 

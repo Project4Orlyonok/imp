@@ -1,15 +1,14 @@
-import jade.core.Agent;
-
 import java.util.Random;
 
 public class GenHour {
 
+    //класс для задания мощности за час для различных генераций
     public double PowHour(String agent, int time) {
         double pow = 0;
         double power;
         switch (agent) {
             case "Wind": {
-                power = 28.2;
+                power = 25.2;
                 Random random = new Random();
                 pow = Math.abs(random.nextGaussian() * power);
                 break;
