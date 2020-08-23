@@ -15,7 +15,6 @@ public class ConsumerBeh extends TickerBehaviour {
     private JsonCons jsonCons = new JsonCons();
     private int StartTime;
 
-    //    List<Double> pow=Arrays.asList(1.0,2.4,3.7,4.0,5.8);
     public ConsumerBeh(Agent a, int period, Time time, ParsConfig getConfig) {
         super(a, period);
         this.time = time;
@@ -31,8 +30,8 @@ public class ConsumerBeh extends TickerBehaviour {
 
 //        запрос требуемой мощности на ближайший отрезок времени:
 
-        requementPower = 1.0;
-//        requementPower = getConfig.pow(time.getCurrentTime() / 60, myAgent.getLocalName() + ".xml");
+//        requementPower = 1.0;
+        requementPower = getConfig.pow(time.getCurrentTime() / 60, myAgent.getLocalName() + ".xml");
         ACLMessage message = new ACLMessage(ACLMessage.INFORM);//имена сообщениям
         message.setContent(String.valueOf(requementPower));
         message.setProtocol("NeedAuction");
