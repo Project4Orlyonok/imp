@@ -8,13 +8,11 @@ import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 
 public class DistribBehStart extends Behaviour {
-    private GenerationInfo genPower;
     private boolean flag = false;
     private JsonDistr json = new JsonDistr();
     private Time time;
 
-    public DistribBehStart(GenerationInfo genPower, Time time) {
-        this.genPower = genPower;
+    public DistribBehStart( Time time) {
         this.time = time;
     }
 
@@ -42,7 +40,7 @@ public class DistribBehStart extends Behaviour {
             System.out.println(receivedMsg.getSender().getLocalName() + "  запросил  " + receivedMsg.getContent());
 //            создание нового поведения
             myAgent.addBehaviour(new DistribContinue(topic, resultsAID, receivedMsg.getSender().getLocalName(),
-                    Double.parseDouble(receivedMsg.getContent()), genPower, json, time, receivedMsg.getOntology()));
+                    Double.parseDouble(receivedMsg.getContent()), json, time, receivedMsg.getOntology()));
         }
     }
 

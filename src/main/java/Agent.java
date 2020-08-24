@@ -28,7 +28,7 @@ public class Agent extends jade.core.Agent {
                 break;
             }
             case "Distributor": {
-                addBehaviour(new DistribBehStart(power,time));
+                addBehaviour(new DistribBehStart(time));
                 break;
             }
             case "Consumer1":

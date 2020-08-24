@@ -10,18 +10,16 @@ public class DistribContinue extends Behaviour {
     private String consumer;
     private double request;
     private boolean flag = false;
-    private GenerationInfo generationPower;
     private JsonDistr json;
     private Time time;
     private String ontology;
     private int count = 0;
 
-    public DistribContinue(AID topic, AID[] resultsAID, String consumer, double request, GenerationInfo generationPower, JsonDistr json, Time time, String ontology) {
+    public DistribContinue(AID topic, AID[] resultsAID, String consumer, double request,  JsonDistr json, Time time, String ontology) {
         this.topic = topic;
         this.resultsAID = resultsAID;
         this.consumer = consumer;
         this.request = request;
-        this.generationPower = generationPower;
         this.json = json;
         this.time = time;
         this.ontology = ontology;

@@ -3,6 +3,8 @@
 //public class Main {
 //    public static void main(String[] args) {
 //        Time time = new Time();
+////        System.out.println(String.CASE_INSENSITIVE_ORDER);
+////        System.out.println(Integer.MAX_VALUE);
 ////        Thread some = new Thread(new Runnable() {
 ////            @Override
 ////            public void run() {

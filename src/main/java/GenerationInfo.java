@@ -60,9 +60,10 @@ public class GenerationInfo {
         while (time - MapWithLastAskTime.get(agent) < 0) {
             time += 24 * 60;
         }
+
         //если был переход через час, то обновить актуальную мощность на данный час и мощность в накопителе "System" и "Heat"
         if ((time / 60 - MapWithLastAskTime.get(agent) / 60) >= 1) {
-            MapWithActualPower.put(agent, new GenHour().PowHour(agent, (time / 60) % (24)) / 60);
+            MapWithActualPower.replace(agent, new GenHour().PowHour(agent, (time / 60) % (24)) / 60);
             if ((agent.equals("System") || agent.equals("Heat"))) {
                 MapWithCurrentNakop.replace(agent, 0.0);
                 power = MapWithActualPower.get(agent) * 60;
@@ -82,8 +83,10 @@ public class GenerationInfo {
             MapWithCurrentNakop.replace(agent, MapWithMaxNakopSize.get(agent));
 
         //изменить время последнего запроса
+//        System.out.println(time+"  "+ MapWithLastAskTime.get(agent)+"  "+agent+"  "+MapWithReservePower.get(agent)+"  "
+//                +MapWithActualPower.get(agent)*60);
         MapWithLastAskTime.replace(agent, time);
-
+//        System.out.println(MapWithLastAskTime.get(agent)+"  "+MapWithCurrentNakop.get(agent)+"  "+agent);
         double currentPower = (MapWithCurrentNakop.get(agent) - MapWithReservePower.get(agent));
         //если доступная мощность больше требуемого запроса, то вернуть цену, иначе "Left"
         if (request <= (currentPower)) {
@@ -98,8 +101,7 @@ public class GenerationInfo {
     }
 
     public void reservePower(double elem, String agent) {
-        MapWithReservePower.put(agent, MapWithReservePower.get(agent) + elem);
-
+        MapWithReservePower.replace(agent, MapWithReservePower.get(agent) + elem);
     }
 
     public void minPower(double elem, String agent) {

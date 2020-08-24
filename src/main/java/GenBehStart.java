@@ -30,7 +30,7 @@ public class GenBehStart extends Behaviour {
             message.setProtocol("Ready");
             message.setContent("OK");
             myAgent.send(message);
-            System.out.println(myAgent.getLocalName() + "  подписался   " + topic.getLocalName());
+//            System.out.println(myAgent.getLocalName() + "  подписался   " + topic.getLocalName());
             myAgent.addBehaviour(new GenBehContinue(time, topic, generationPower, jsonGen));
         }
     }

@@ -64,7 +64,7 @@ public class DistribBehFinal extends Behaviour {
 
                 winnerMessage.setContent(agent.getLocalName());
                 myAgent.send(winnerMessage);
-                System.out.println(topic.getLocalName() + "   выиграл  " + agent.getLocalName());
+//                System.out.println(topic.getLocalName() + "   выиграл  " + agent.getLocalName());
 
                 Map<String, String> data = json.data(minprice, request, agent.getLocalName(), consumer, time.getCurrentTime() / 60);
                 String stroka = json.stroka(data);
@@ -89,8 +89,8 @@ public class DistribBehFinal extends Behaviour {
             // то отправить сообщение с протоколом "Winner" и сообщение потребителю
             if (countNoLeftAgents == 0 && countAllAgents == resultsAID.length) {
 
-                winnerMessage.setContent(" ");
-                winnerMessage.addReceiver(topic);
+                winnerMessage.setContent("No");
+//                winnerMessage.addReceiver(topic);
                 myAgent.send(winnerMessage);
 
 

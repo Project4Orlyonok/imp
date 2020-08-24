@@ -42,10 +42,15 @@ public class GenBehContinue extends Behaviour {
                 String price= generationPower.FormPrice(time.getCurrentTime(), myAgent.getLocalName(), request);
                 message.setContent(price);
             }
-            System.out.println(myAgent.getLocalName() + " в " + topic.getLocalName() + " за " + message.getContent());
-            myAgent.send(message);
+            if (message.getContent().equals("Left")) {
+                System.out.println(myAgent.getLocalName() + " в " + topic.getLocalName() + " " + message.getContent());
+            }
+            else {
+                System.out.println(myAgent.getLocalName() + " в " + topic.getLocalName() + " за " + message.getContent());
+            }
 //            резервирование запрошенной мощности
             generationPower.reservePower(request, myAgent.getLocalName());
+            myAgent.send(message);
             myAgent.addBehaviour(new GenBehFinal(topic, generationPower, jsonGen, time));
             flag = true;
         }

@@ -1,7 +1,7 @@
 import java.util.Random;
 
 public class GenHour {
-
+    Random random = new Random();
     //класс для задания мощности за час для различных генераций
     public double PowHour(String agent, int time) {
         double pow = 0;
@@ -9,13 +9,12 @@ public class GenHour {
         switch (agent) {
             case "Wind": {
                 power = 25.2;
-                Random random = new Random();
                 pow = Math.abs(random.nextGaussian() * power);
                 break;
             }
             case "Sun": {
                 power = 28;
-                pow = Math.abs(((Math.random() / 10 - 0.05 + 1) * powSun(time)) * power);
+                pow = Math.abs(((Math.random() / 10 + 0.95) * powSun(time)) * power);
                 break;
             }
             case "System": {

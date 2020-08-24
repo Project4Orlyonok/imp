@@ -12,6 +12,7 @@ public class JsonGen {
         Json.put("name", name);
         if (!JsonArray.contains(data)) {
             JsonArray.add(data);
+            System.out.println(data+" "+name);
         }
 
         Json.put("data", JsonArray);

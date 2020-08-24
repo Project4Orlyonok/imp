@@ -29,7 +29,7 @@ public class GenBehFinal extends Behaviour {
         ACLMessage receivedMsg = myAgent.receive(mt);
 
         if (receivedMsg != null) {
-
+//            System.out.println(receivedMsg);
 //            запрос полной мощности без учета зарезервированной до сделки
             powerBefore = generationPower.allPower(myAgent.getLocalName());
 
@@ -39,9 +39,8 @@ public class GenBehFinal extends Behaviour {
 //
             }
 //            запрос полной мощности без учета зарезервированной после сделки
-            powerAfter = generationPower.allPower(myAgent.getLocalName());//+comment
-            generationPower.reservePower(-Double.parseDouble(receivedMsg.getOntology()), myAgent.getLocalName());
-
+            powerAfter = generationPower.allPower(myAgent.getLocalName());
+            generationPower.reservePower(-Double.parseDouble(receivedMsg.getOntology()), myAgent.getLocalName());//странно=>потестить
             //создание словаря, содержащего информацию о мощности до сделки, после сделки, о времени для текущего агента и запись его в файл
             Map<String, String> data = jsonGen.dataGen(powerBefore, powerAfter, time.getCurrentTime() / 60 % 24);
             String stroka = jsonGen.stroka(data, myAgent.getLocalName());
